@@ -1,0 +1,102 @@
+{
+  "$comment": "Provenance manifest for every third-party asset used by the prototype. fetch-sources.mjs downloads these into .cache/sources; build-assets.mjs turns them into public/assets. 'rightsReview' records what has and has not been verified; uploader-asserted licences are not treated as a rights warranty (see docs/research/scientific-data-and-licensing.md).",
+  "retrieved": "2026-11-16",
+  "objaverse": {
+    "$comment": "Objaverse 1.0 (allenai/objaverse on Hugging Face) mirrors Sketchfab uploads together with the uploader's licence and attribution metadata.",
+    "baseUrl": "https://huggingface.co/datasets/allenai/objaverse/resolve/main/",
+    "items": [
+      {
+        "id": "trex",
+        "uid": "516dbe9717554e74b0bfcbb77a431b17",
+        "path": "glbs/000-090/516dbe9717554e74b0bfcbb77a431b17.glb",
+        "sha256": "e7687aeb38bc13f5bc8a5aeef71c1ff060904c0fdd19e3abe486940ced0f9d47",
+        "title": "Tyrannosaurus Rex Lowpoly",
+        "creator": "pikabobalex",
+        "creatorUrl": "https://sketchfab.com/pikabobalex",
+        "sourceUrl": "https://sketchfab.com/3d-models/516dbe9717554e74b0bfcbb77a431b17",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "reconstruction",
+        "modifications": "Rescaled to ~12 m length, re-oriented, walk loop trimmed from the source showcase animation (frames 0-28), idle and roar clips authored in Blender, textures resized and compressed.",
+        "rightsReview": "Uploader-asserted CC BY 4.0. Description states it was sculpted in ZBrush, retopologised in 3D-Coat and rigged in 3ds Max by the uploader. No duplicate uploads of the mesh found in Objaverse. Not independently verified."
+      },
+      {
+        "id": "triceratops",
+        "uid": "ad266f58d2e04c5fb99ba5342c9a6f6d",
+        "path": "glbs/000-080/ad266f58d2e04c5fb99ba5342c9a6f6d.glb",
+        "sha256": "9747c205101518fd11df2345ec57368a4f829e03a2f68adc888e58c8c95e373b",
+        "title": "Triceratops",
+        "creator": "Erina eka syaharani (erinaekasyaharani)",
+        "creatorUrl": "https://sketchfab.com/erinaekasyaharani",
+        "sourceUrl": "https://sketchfab.com/3d-models/ad266f58d2e04c5fb99ba5342c9a6f6d",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "reconstruction",
+        "modifications": "Rescaled to ~8.5 m length, re-oriented, source walk cycle kept, graze and alert clips authored in Blender, textures resized and compressed.",
+        "rightsReview": "Uploader-asserted CC BY 4.0. Earliest Objaverse upload of this mesh (2020-01-05); a later 'Torosaurus' remix by another user shares the mesh. Not independently verified."
+      },
+      {
+        "id": "fossil-mount",
+        "uid": "e9fa58a7f25645db99b9519073c88b40",
+        "path": "glbs/000-067/e9fa58a7f25645db99b9519073c88b40.glb",
+        "sha256": "4592bd2e581dd8fccbe278e8d585a9cbd7de80f8e766805531fad507ced157a1",
+        "title": "Tyrannosaurus Rex / Triceratops [SmithsonianDPO]",
+        "creator": "Smithsonian Digitization Program Office (repost by Thomas Flynn)",
+        "creatorUrl": "https://3d.si.edu/t-rex",
+        "sourceUrl": "https://sketchfab.com/3d-models/e9fa58a7f25645db99b9519073c88b40",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "kind": "scan",
+        "modifications": "Decimated, textures resized and compressed, rescaled and placed on a plinth.",
+        "rightsReview": "Smithsonian Open Access data reposted under CC0. Per the Smithsonian description, the T. rex is a single fossil individual (unearthed in Montana from 1988) and the Triceratops is a digital composite scaled from several specimens. The original Smithsonian record could not be fetched during research (HTTP 403)."
+      },
+      {
+        "id": "bald-cypress",
+        "uid": "feb56a05db3546d390d0957e03cf48a3",
+        "path": "glbs/000-004/feb56a05db3546d390d0957e03cf48a3.glb",
+        "sha256": "0c0a48864b94e8724c97740e52e6f4dc74584b1e5cf7ffef27d30cf18cead459",
+        "title": "Bald Cypress",
+        "creator": "BaptisteBerard",
+        "creatorUrl": "https://sketchfab.com/BaptisteBerard",
+        "sourceUrl": "https://sketchfab.com/3d-models/feb56a05db3546d390d0957e03cf48a3",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "environment",
+        "modifications": "Rescaled, textures resized and compressed, instanced as stand-in for Hell Creek taxodiaceous conifers.",
+        "rightsReview": "Uploader-asserted CC BY 4.0. Description says it was made with SpeedTree; rights in any bundled SpeedTree library textures not verified."
+      },
+      {
+        "id": "fern-treeit",
+        "uid": "38531afd86434987b1a0bf5968fe001f",
+        "path": "glbs/000-110/38531afd86434987b1a0bf5968fe001f.glb",
+        "sha256": "66b2f3482534b9295c1e2be577e4174f99a0a0eab96fa4be2cf4378f032f5014",
+        "title": "Fern",
+        "creator": "evolveduk",
+        "creatorUrl": "https://sketchfab.com/evolveduk",
+        "sourceUrl": "https://sketchfab.com/3d-models/38531afd86434987b1a0bf5968fe001f",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "environment",
+        "modifications": "Rescaled, textures resized and compressed, instanced as ground cover.",
+        "rightsReview": "Uploader-asserted CC BY 4.0 ('fern made in treeit'). Not independently verified."
+      }
+    ]
+  },
+  "polyhaven": {
+    "$comment": "Poly Haven assets are CC0 (https://polyhaven.com/license). Files are resolved through https://api.polyhaven.com/files/<id>.",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "items": [
+      { "id": "citrus_orchard_puresky", "type": "hdri", "res": "2k", "title": "Citrus Orchard (Pure Sky)", "creator": "Dimitrios Savva, Jarod Guest", "use": "Morning sky and image-based lighting" },
+      { "id": "belfast_sunset_puresky", "type": "hdri", "res": "2k", "title": "Belfast Sunset (Pure Sky)", "creator": "Dimitrios Savva, Greg Zaal, Jarod Guest", "use": "Dusk sky and image-based lighting" },
+      { "id": "studio_small_09", "type": "hdri", "res": "1k", "title": "Studio Small 09", "creator": "Sergej Majboroda", "use": "Gallery reflections for the fossil scan" },
+      { "id": "forrest_ground_01", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Forest Ground 01", "creator": "Rob Tuytel", "use": "Floodplain soil" },
+      { "id": "brown_mud_leaves_01", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Brown Mud Leaves 01", "creator": "Rob Tuytel", "use": "River-margin mud" },
+      { "id": "fern_02", "type": "model", "res": "1k", "title": "Fern 02", "creator": "Rob Tuytel, Rico Cilliers", "use": "Ground-cover fern" },
+      { "id": "rock_07", "type": "model", "res": "1k", "title": "Rock 07", "creator": "Jenelle van Heerden", "use": "Scattered rocks" },
+      { "id": "boulder_01", "type": "model", "res": "1k", "title": "Boulder 01", "creator": "Rico Cilliers", "use": "Large rocks" },
+      { "id": "dead_tree_trunk", "type": "model", "res": "1k", "title": "Dead Tree Trunk", "creator": "Rob Tuytel", "use": "Fallen log" },
+      { "id": "tree_stump_01", "type": "model", "res": "1k", "title": "Tree Stump 01", "creator": "Rob Tuytel", "use": "Stump" }
+    ]
+  }
+}

@@ -1,0 +1,1352 @@
+{
+  "source": "Paleobiology Database",
+  "sourceUrl": "https://paleobiodb.org/",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "retrieved": "2026-11-16T03:02:36.658Z",
+  "notes": [
+    "Fossil age bounds are the ages of the geological intervals containing occurrences; they are not an extinction date.",
+    "Collection coordinates are modern localities. Palaeocoordinates are model-dependent (GPlates, mid-interval age as reported by PBDB).",
+    "Occurrence points are not a range map."
+  ],
+  "taxa": {
+    "Tyrannosaurus rex": {
+      "pbdbTaxonId": "txn:54833",
+      "pbdbTaxonUrl": "https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=54833",
+      "attribution": "Osborn 1905",
+      "family": "Tyrannosauridae",
+      "higherGroup": "Reptilia",
+      "diet": "carnivore",
+      "lifeHabit": "ground dwelling, solitary",
+      "reportedOccurrences": 70,
+      "firstAppearanceMa": {
+        "max": 83.6,
+        "min": 72.2,
+        "interval": "Campanian"
+      },
+      "lastAppearanceMa": {
+        "max": 72.2,
+        "min": 66,
+        "interval": "Maastrichtian"
+      },
+      "occurrences": {
+        "count": 70,
+        "byInterval": [
+          {
+            "name": "Late Maastrichtian",
+            "count": 42
+          },
+          {
+            "name": "Lancian",
+            "count": 13
+          },
+          {
+            "name": "Maastrichtian",
+            "count": 13
+          },
+          {
+            "name": "Late Campanian",
+            "count": 2
+          }
+        ],
+        "byFormation": [
+          {
+            "name": "Hell Creek",
+            "count": 43
+          },
+          {
+            "name": "Lance",
+            "count": 10
+          },
+          {
+            "name": "Denver",
+            "count": 5
+          },
+          {
+            "name": "Ferris",
+            "count": 4
+          },
+          {
+            "name": "Scollard",
+            "count": 2
+          },
+          {
+            "name": "Dinosaur Park",
+            "count": 1
+          },
+          {
+            "name": "Laramie",
+            "count": 1
+          },
+          {
+            "name": "Frenchman",
+            "count": 1
+          },
+          {
+            "name": "Lomas Coloradas",
+            "count": 1
+          },
+          {
+            "name": "Willow Creek",
+            "count": 1
+          },
+          {
+            "name": "Kirtland",
+            "count": 1
+          }
+        ],
+        "byRegion": [
+          {
+            "name": "North Dakota, US",
+            "count": 22
+          },
+          {
+            "name": "Wyoming, US",
+            "count": 13
+          },
+          {
+            "name": "Montana, US",
+            "count": 13
+          },
+          {
+            "name": "South Dakota, US",
+            "count": 9
+          },
+          {
+            "name": "Colorado, US",
+            "count": 6
+          },
+          {
+            "name": "Alberta, CA",
+            "count": 4
+          },
+          {
+            "name": "Saskatchewan, CA",
+            "count": 1
+          },
+          {
+            "name": "Sonora, MX",
+            "count": 1
+          },
+          {
+            "name": "New Mexico, US",
+            "count": 1
+          }
+        ],
+        "qualified": 16,
+        "points": [
+          {
+            "id": "occ:139292",
+            "lat": 51.906399,
+            "lng": -113.0289,
+            "paleoLat": 64.06,
+            "paleoLng": -68.22,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Scollard"
+          },
+          {
+            "id": "occ:139293",
+            "lat": 51.933334,
+            "lng": -113.23333,
+            "paleoLat": 64.15,
+            "paleoLng": -68.44,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Scollard"
+          },
+          {
+            "id": "occ:220009",
+            "lat": 50.727234,
+            "lng": -111.524582,
+            "paleoLat": 60.92,
+            "paleoLng": -65.73,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Campanian",
+            "formation": "Dinosaur Park"
+          },
+          {
+            "id": "occ:280101",
+            "lat": 43.489639,
+            "lng": -104.456505,
+            "paleoLat": 53.97,
+            "paleoLng": -65.56,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:291021",
+            "lat": 40.386391,
+            "lng": -104.491669,
+            "paleoLat": 51.14,
+            "paleoLng": -67.66,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Laramie"
+          },
+          {
+            "id": "occ:401751",
+            "lat": 47.536201,
+            "lng": -107.083,
+            "paleoLat": 58.49,
+            "paleoLng": -64.67,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457806",
+            "lat": 45.948799,
+            "lng": -103.9617,
+            "paleoLat": 56.03,
+            "paleoLng": -63.15,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457816",
+            "lat": 45.948799,
+            "lng": -103.9617,
+            "paleoLat": 56.03,
+            "paleoLng": -63.15,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457841",
+            "lat": 46.099998,
+            "lng": -103.300003,
+            "paleoLat": 55.96,
+            "paleoLng": -62.3,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457862",
+            "lat": 45.977699,
+            "lng": -103.753899,
+            "paleoLat": 56,
+            "paleoLng": -62.9,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457881",
+            "lat": 46.026402,
+            "lng": -103.766899,
+            "paleoLat": 56.04,
+            "paleoLng": -62.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457902",
+            "lat": 46.026402,
+            "lng": -103.766899,
+            "paleoLat": 56.04,
+            "paleoLng": -62.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457914",
+            "lat": 46.026402,
+            "lng": -103.766899,
+            "paleoLat": 56.04,
+            "paleoLng": -62.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457927",
+            "lat": 46.026402,
+            "lng": -103.766899,
+            "paleoLat": 56.04,
+            "paleoLng": -62.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457946",
+            "lat": 46.026402,
+            "lng": -103.766899,
+            "paleoLat": 56.04,
+            "paleoLng": -62.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457975",
+            "lat": 46.136902,
+            "lng": -103.795403,
+            "paleoLat": 56.23,
+            "paleoLng": -62.13,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:457986",
+            "lat": 46.406399,
+            "lng": -103.939697,
+            "paleoLat": 56.44,
+            "paleoLng": -62.76,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458111",
+            "lat": 46.381901,
+            "lng": -103.964401,
+            "paleoLat": 56.42,
+            "paleoLng": -62.81,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458207",
+            "lat": 46.449799,
+            "lng": -103.0233,
+            "paleoLat": 56.27,
+            "paleoLng": -61.02,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458213",
+            "lat": 46.464298,
+            "lng": -104.0233,
+            "paleoLat": 56.59,
+            "paleoLng": -62.11,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458258",
+            "lat": 46.334,
+            "lng": -103.897903,
+            "paleoLat": 56.36,
+            "paleoLng": -62.78,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458288",
+            "lat": 46.334,
+            "lng": -103.897903,
+            "paleoLat": 56.36,
+            "paleoLng": -62.78,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:458292",
+            "lat": 46.334,
+            "lng": -103.897903,
+            "paleoLat": 56.44,
+            "paleoLng": -62.08,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:459864",
+            "lat": 46.464298,
+            "lng": -104.002403,
+            "paleoLat": 56.51,
+            "paleoLng": -62.79,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:459975",
+            "lat": 46.464298,
+            "lng": -104.002403,
+            "paleoLat": 56.59,
+            "paleoLng": -62.09,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:460445",
+            "lat": 46.3629,
+            "lng": -103.897903,
+            "paleoLat": 56.38,
+            "paleoLng": -62.75,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:460473",
+            "lat": 45.93903,
+            "lng": -103.946098,
+            "paleoLat": 56.02,
+            "paleoLng": -63.15,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:460480",
+            "lat": 45.93903,
+            "lng": -103.946098,
+            "paleoLat": 56.02,
+            "paleoLng": -63.15,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:460503",
+            "lat": 45.93903,
+            "lng": -103.946098,
+            "paleoLat": 56.02,
+            "paleoLng": -63.15,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:464520",
+            "lat": 43.441799,
+            "lng": -104.411598,
+            "paleoLat": 53.91,
+            "paleoLng": -65.54,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:487164",
+            "lat": 47.96389,
+            "lng": -106.455559,
+            "paleoLat": 58.68,
+            "paleoLng": -63.58,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:487166",
+            "lat": 47.96389,
+            "lng": -106.455559,
+            "paleoLat": 58.68,
+            "paleoLng": -63.58,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:487593",
+            "lat": 48.286839,
+            "lng": -105.839996,
+            "paleoLat": 58.7,
+            "paleoLng": -63.3,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:488363",
+            "lat": 43.116329,
+            "lng": -104.637001,
+            "paleoLat": 53.68,
+            "paleoLng": -66.02,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:490989",
+            "lat": 39.751331,
+            "lng": -105.203766,
+            "paleoLat": 50.77,
+            "paleoLng": -68.85,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Denver"
+          },
+          {
+            "id": "occ:491014",
+            "lat": 39.8675,
+            "lng": -105.110275,
+            "paleoLat": 50.84,
+            "paleoLng": -68.68,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Denver"
+          },
+          {
+            "id": "occ:491021",
+            "lat": 39.613335,
+            "lng": -105.016113,
+            "paleoLat": 50.58,
+            "paleoLng": -68.72,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Denver"
+          },
+          {
+            "id": "occ:491030",
+            "lat": 39.836666,
+            "lng": -105.036667,
+            "paleoLat": 50.79,
+            "paleoLng": -68.61,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Denver"
+          },
+          {
+            "id": "occ:491043",
+            "lat": 39.8675,
+            "lng": -105.110275,
+            "paleoLat": 50.84,
+            "paleoLng": -68.68,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Denver"
+          },
+          {
+            "id": "occ:519729",
+            "lat": 43.128304,
+            "lng": -104.072433,
+            "paleoLat": 53.52,
+            "paleoLng": -65.38,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:529533",
+            "lat": 49.516666,
+            "lng": -108.816666,
+            "paleoLat": 60.7,
+            "paleoLng": -65.6,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Frenchman"
+          },
+          {
+            "id": "occ:545327",
+            "lat": 43.166698,
+            "lng": -104.533302,
+            "paleoLat": 53.7,
+            "paleoLng": -65.87,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:545995",
+            "lat": 43.266701,
+            "lng": -104.650002,
+            "paleoLat": 53.82,
+            "paleoLng": -65.93,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:566954",
+            "lat": 45.65139,
+            "lng": -103.624443,
+            "paleoLat": 55.66,
+            "paleoLng": -63.01,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:577480",
+            "lat": 47.536201,
+            "lng": -107.083,
+            "paleoLat": 58.49,
+            "paleoLng": -64.67,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:577481",
+            "lat": 47.536201,
+            "lng": -107.083,
+            "paleoLat": 58.49,
+            "paleoLng": -64.67,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:646548",
+            "lat": 45.530899,
+            "lng": -101.626297,
+            "paleoLat": 54.93,
+            "paleoLng": -60.91,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:690124",
+            "lat": 45.062778,
+            "lng": -103.451668,
+            "paleoLat": 55.16,
+            "paleoLng": -62.59,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:692635",
+            "lat": 47.799999,
+            "lng": -106.099998,
+            "paleoLat": 58.34,
+            "paleoLng": -64.03,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:700704",
+            "lat": 41.934753,
+            "lng": -106.890236,
+            "paleoLat": 53.27,
+            "paleoLng": -69.38,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Ferris"
+          },
+          {
+            "id": "occ:700725",
+            "lat": 41.799999,
+            "lng": -107,
+            "paleoLat": 53.18,
+            "paleoLng": -69.59,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Ferris"
+          },
+          {
+            "id": "occ:702708",
+            "lat": 41.939877,
+            "lng": -106.876312,
+            "paleoLat": 53.27,
+            "paleoLng": -69.36,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Ferris"
+          },
+          {
+            "id": "occ:702767",
+            "lat": 41.935326,
+            "lng": -106.88224,
+            "paleoLat": 53.27,
+            "paleoLng": -69.37,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Ferris"
+          },
+          {
+            "id": "occ:1093504",
+            "lat": 46.413055,
+            "lng": -103.50222,
+            "paleoLat": 56.31,
+            "paleoLng": -62.27,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1093548",
+            "lat": 46.413055,
+            "lng": -103.50222,
+            "paleoLat": 56.31,
+            "paleoLng": -62.27,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1123288",
+            "lat": 43.422287,
+            "lng": -104.494812,
+            "paleoLat": 53.92,
+            "paleoLng": -65.65,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:1179394",
+            "lat": 44.935799,
+            "lng": -108.853798,
+            "paleoLat": 56.59,
+            "paleoLng": -69.53,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:1199943",
+            "lat": 31,
+            "lng": -109,
+            "paleoLat": 43.75,
+            "paleoLng": -77.03,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Lomas Coloradas"
+          },
+          {
+            "id": "occ:1210694",
+            "lat": 47.732971,
+            "lng": -106.255913,
+            "paleoLat": 58.33,
+            "paleoLng": -64.26,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1210695",
+            "lat": 49.607498,
+            "lng": -114.106903,
+            "paleoLat": 62.34,
+            "paleoLng": -71.92,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Willow Creek"
+          },
+          {
+            "id": "occ:1210698",
+            "lat": 45.053665,
+            "lng": -101.96788,
+            "paleoLat": 54.61,
+            "paleoLng": -61.65,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1350466",
+            "lat": 45.66,
+            "lng": -105.080002,
+            "paleoLat": 56.12,
+            "paleoLng": -64.64,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1372226",
+            "lat": 47.536201,
+            "lng": -107.083,
+            "paleoLat": 58.49,
+            "paleoLng": -64.67,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1584409",
+            "lat": 45.651001,
+            "lng": -103.624001,
+            "paleoLat": 55.66,
+            "paleoLng": -63.01,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1584410",
+            "lat": 47.886002,
+            "lng": -106.306,
+            "paleoLat": 58.48,
+            "paleoLng": -64.19,
+            "paleoModel": "gplates (mid)",
+            "interval": "Lancian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1588479",
+            "lat": 45.000481,
+            "lng": -103.188957,
+            "paleoLat": 54.94,
+            "paleoLng": -63.03,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1599636",
+            "lat": 47.479,
+            "lng": -104.484001,
+            "paleoLat": 57.56,
+            "paleoLng": -62.48,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:1625433",
+            "lat": 36.507999,
+            "lng": -108.320999,
+            "paleoLat": 46.86,
+            "paleoLng": -71.16,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Campanian",
+            "formation": "Kirtland"
+          },
+          {
+            "id": "occ:1688887",
+            "lat": 45.978611,
+            "lng": -105.038887,
+            "paleoLat": 56.47,
+            "paleoLng": -63.65,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:2069689",
+            "lat": 46.951,
+            "lng": -107.241997,
+            "paleoLat": 58.02,
+            "paleoLng": -65.36,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          }
+        ]
+      },
+      "queries": [
+        "https://paleobiodb.org/data1.2/taxa/single.json?name=Tyrannosaurus%20rex&show=app,attr,class,parent,ecospace",
+        "https://paleobiodb.org/data1.2/occs/list.json?base_name=Tyrannosaurus%20rex&show=coords,loc,strat,paleoloc,ident"
+      ]
+    },
+    "Triceratops horridus": {
+      "pbdbTaxonId": "txn:63766",
+      "pbdbTaxonUrl": "https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=63766",
+      "attribution": "(Marsh 1889)",
+      "family": "Ceratopsidae",
+      "higherGroup": "Ornithischia",
+      "diet": "herbivore",
+      "lifeHabit": "ground dwelling",
+      "reportedOccurrences": 41,
+      "firstAppearanceMa": {
+        "max": 83.6,
+        "min": 72.2,
+        "interval": "Campanian"
+      },
+      "lastAppearanceMa": {
+        "max": 72.2,
+        "min": 66,
+        "interval": "Maastrichtian"
+      },
+      "occurrences": {
+        "count": 41,
+        "byInterval": [
+          {
+            "name": "Late Maastrichtian",
+            "count": 35
+          },
+          {
+            "name": "Maastrichtian",
+            "count": 5
+          },
+          {
+            "name": "Late Campanian",
+            "count": 1
+          }
+        ],
+        "byFormation": [
+          {
+            "name": "Lance",
+            "count": 26
+          },
+          {
+            "name": "Hell Creek",
+            "count": 10
+          },
+          {
+            "name": "Scollard",
+            "count": 2
+          },
+          {
+            "name": "Laramie",
+            "count": 1
+          },
+          {
+            "name": "Dinosaur Park",
+            "count": 1
+          },
+          {
+            "name": "Evanston",
+            "count": 1
+          }
+        ],
+        "byRegion": [
+          {
+            "name": "Wyoming, US",
+            "count": 26
+          },
+          {
+            "name": "Montana, US",
+            "count": 6
+          },
+          {
+            "name": "South Dakota, US",
+            "count": 4
+          },
+          {
+            "name": "Alberta, CA",
+            "count": 3
+          },
+          {
+            "name": "North Dakota, US",
+            "count": 1
+          },
+          {
+            "name": "Colorado, US",
+            "count": 1
+          }
+        ],
+        "qualified": 19,
+        "points": [
+          {
+            "id": "occ:457968",
+            "lat": 46.305,
+            "lng": -103.981499,
+            "paleoLat": 56.36,
+            "paleoLng": -62.89,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:465691",
+            "lat": 42.195904,
+            "lng": -104.457275,
+            "paleoLat": 52.79,
+            "paleoLng": -66.45,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465710",
+            "lat": 43.121864,
+            "lng": -104.647118,
+            "paleoLat": 53.69,
+            "paleoLng": -66.03,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465719",
+            "lat": 43.237862,
+            "lng": -104.608406,
+            "paleoLat": 53.78,
+            "paleoLng": -65.9,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465720",
+            "lat": 43.15778,
+            "lng": -104.553055,
+            "paleoLat": 53.69,
+            "paleoLng": -65.9,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465721",
+            "lat": 43.191978,
+            "lng": -104.644264,
+            "paleoLat": 53.75,
+            "paleoLng": -65.98,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465722",
+            "lat": 43.227592,
+            "lng": -104.572258,
+            "paleoLat": 53.76,
+            "paleoLng": -65.87,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:465730",
+            "lat": 43.181259,
+            "lng": -104.551041,
+            "paleoLat": 53.71,
+            "paleoLng": -65.88,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:475086",
+            "lat": 51.891899,
+            "lng": -113.005402,
+            "paleoLat": 64.04,
+            "paleoLng": -68.21,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Scollard"
+          },
+          {
+            "id": "occ:475087",
+            "lat": 51.906399,
+            "lng": -113.0289,
+            "paleoLat": 64.06,
+            "paleoLng": -68.22,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Scollard"
+          },
+          {
+            "id": "occ:487602",
+            "lat": 47.839645,
+            "lng": -106.161316,
+            "paleoLat": 58.48,
+            "paleoLng": -63.35,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:491005",
+            "lat": 40.66996,
+            "lng": -104.333191,
+            "paleoLat": 51.35,
+            "paleoLng": -67.31,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Laramie"
+          },
+          {
+            "id": "occ:496313",
+            "lat": 43.27409,
+            "lng": -104.603691,
+            "paleoLat": 53.81,
+            "paleoLng": -65.87,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:501688",
+            "lat": 43.139351,
+            "lng": -104.707176,
+            "paleoLat": 53.72,
+            "paleoLng": -66.08,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:514313",
+            "lat": 41.907799,
+            "lng": -104.1978,
+            "paleoLat": 52.45,
+            "paleoLng": -66.35,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518593",
+            "lat": 43.298447,
+            "lng": -104.662415,
+            "paleoLat": 53.85,
+            "paleoLng": -65.92,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518594",
+            "lat": 43.255741,
+            "lng": -104.624504,
+            "paleoLat": 53.8,
+            "paleoLng": -65.91,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518595",
+            "lat": 43.200047,
+            "lng": -104.657974,
+            "paleoLat": 53.76,
+            "paleoLng": -65.99,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518596",
+            "lat": 43.219185,
+            "lng": -104.547592,
+            "paleoLat": 53.75,
+            "paleoLng": -65.85,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518597",
+            "lat": 43.219185,
+            "lng": -104.547592,
+            "paleoLat": 53.75,
+            "paleoLng": -65.85,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518598",
+            "lat": 43.213612,
+            "lng": -104.553886,
+            "paleoLat": 53.74,
+            "paleoLng": -65.86,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518599",
+            "lat": 43.213612,
+            "lng": -104.553886,
+            "paleoLat": 53.74,
+            "paleoLng": -65.86,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518600",
+            "lat": 43.15778,
+            "lng": -104.553055,
+            "paleoLat": 53.69,
+            "paleoLng": -65.9,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518601",
+            "lat": 43.132011,
+            "lng": -104.563087,
+            "paleoLat": 53.67,
+            "paleoLng": -65.93,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518602",
+            "lat": 43.164665,
+            "lng": -104.476509,
+            "paleoLat": 53.68,
+            "paleoLng": -65.81,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518605",
+            "lat": 43.193295,
+            "lng": -104.463478,
+            "paleoLat": 53.7,
+            "paleoLng": -65.77,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518606",
+            "lat": 43.188305,
+            "lng": -104.473907,
+            "paleoLat": 53.7,
+            "paleoLng": -65.79,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518607",
+            "lat": 43.15831,
+            "lng": -104.544395,
+            "paleoLat": 53.69,
+            "paleoLng": -65.89,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:518609",
+            "lat": 43.183613,
+            "lng": -104.514442,
+            "paleoLat": 53.71,
+            "paleoLng": -65.84,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:896239",
+            "lat": 45.383331,
+            "lng": -105.300003,
+            "paleoLat": 55.94,
+            "paleoLng": -65.1,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:901550",
+            "lat": 47.546665,
+            "lng": -107.115555,
+            "paleoLat": 58.51,
+            "paleoLng": -64.7,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1124598",
+            "lat": 47.546665,
+            "lng": -107.115555,
+            "paleoLat": 58.51,
+            "paleoLng": -64.7,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1171200",
+            "lat": 43.15778,
+            "lng": -104.553055,
+            "paleoLat": 53.69,
+            "paleoLng": -65.9,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:1237867",
+            "lat": 52.081001,
+            "lng": -112.981499,
+            "paleoLat": 62.53,
+            "paleoLng": -66.21,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Campanian",
+            "formation": "Dinosaur Park"
+          },
+          {
+            "id": "occ:1253934",
+            "lat": 41.748199,
+            "lng": -110.626099,
+            "paleoLat": 54.18,
+            "paleoLng": -73.84,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Evanston"
+          },
+          {
+            "id": "occ:1301646",
+            "lat": 47.536201,
+            "lng": -107.018898,
+            "paleoLat": 58.39,
+            "paleoLng": -65.31,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1335007",
+            "lat": 45.393398,
+            "lng": -103.966599,
+            "paleoLat": 55.54,
+            "paleoLng": -63.6,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Lance"
+          },
+          {
+            "id": "occ:1543906",
+            "lat": 47.056198,
+            "lng": -104.593201,
+            "paleoLat": 57.22,
+            "paleoLng": -62.96,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1588536",
+            "lat": 45.002998,
+            "lng": -103.144997,
+            "paleoLat": 54.93,
+            "paleoLng": -62.98,
+            "paleoModel": "gplates (mid)",
+            "interval": "Late Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1593200",
+            "lat": 44.713001,
+            "lng": -103.056,
+            "paleoLat": 54.72,
+            "paleoLng": -62.42,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          },
+          {
+            "id": "occ:1598417",
+            "lat": 45.053055,
+            "lng": -102.880836,
+            "paleoLat": 54.97,
+            "paleoLng": -61.97,
+            "paleoModel": "gplates (mid)",
+            "interval": "Maastrichtian",
+            "formation": "Hell Creek"
+          }
+        ]
+      },
+      "queries": [
+        "https://paleobiodb.org/data1.2/taxa/single.json?name=Triceratops%20horridus&show=app,attr,class,parent,ecospace",
+        "https://paleobiodb.org/data1.2/occs/list.json?base_name=Triceratops%20horridus&show=coords,loc,strat,paleoloc,ident"
+      ]
+    }
+  }
+}

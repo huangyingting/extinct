@@ -1,0 +1,152 @@
+{
+  "models": {
+    "trex": {
+      "url": "assets/models/trex.glb",
+      "bytes": 567280,
+      "length": 12,
+      "height": 5.43,
+      "width": 3.22,
+      "restFootClearance": 0,
+      "walkFootClearance": 0,
+      "walkFootDriftCorrected": 0.101,
+      "walkSpeed": 3.379,
+      "clips": {
+        "Walk": 1.167,
+        "Idle": 8,
+        "Roar": 4
+      },
+      "triangles": 10902
+    },
+    "triceratops": {
+      "url": "assets/models/triceratops.glb",
+      "bytes": 325540,
+      "length": 8.5,
+      "height": 3.37,
+      "width": 1.79,
+      "restFootClearance": 0,
+      "walkFootClearance": 0,
+      "walkFootDriftCorrected": 0.543,
+      "walkSpeed": 0.823,
+      "clips": {
+        "Walk": 3.25,
+        "Graze": 8,
+        "Alert": 4
+      },
+      "triangles": 10372
+    },
+    "fossil-mount": {
+      "url": "assets/models/fossil-mount.glb",
+      "bytes": 4908140,
+      "sourceTriangles": 399812,
+      "triangles": 119941,
+      "size": [
+        5.92,
+        9.49,
+        3.62
+      ]
+    },
+    "bald-cypress": {
+      "url": "assets/models/bald-cypress.glb",
+      "bytes": 563244,
+      "sourceTriangles": 3871,
+      "triangles": 3871,
+      "size": [
+        11.77,
+        13.05,
+        24.07
+      ]
+    },
+    "fern-treeit": {
+      "url": "assets/models/fern-treeit.glb",
+      "bytes": 155624,
+      "sourceTriangles": 560,
+      "triangles": 560,
+      "size": [
+        2.17,
+        2.26,
+        0.93
+      ]
+    },
+    "fern_02": {
+      "url": "assets/models/fern_02.glb",
+      "bytes": 181880,
+      "sourceTriangles": 6232,
+      "triangles": 6232,
+      "size": [
+        1.97,
+        1.72,
+        0.43
+      ]
+    },
+    "rock_07": {
+      "url": "assets/models/rock_07.glb",
+      "bytes": 293364,
+      "sourceTriangles": 14844,
+      "triangles": 2226,
+      "size": [
+        0.17,
+        0.32,
+        0.14
+      ]
+    },
+    "boulder_01": {
+      "url": "assets/models/boulder_01.glb",
+      "bytes": 1187784,
+      "sourceTriangles": 66122,
+      "triangles": 26614,
+      "size": [
+        1.29,
+        1.84,
+        1.01
+      ]
+    },
+    "dead_tree_trunk": {
+      "url": "assets/models/dead_tree_trunk.glb",
+      "bytes": 512560,
+      "sourceTriangles": 101802,
+      "triangles": 8144,
+      "size": [
+        3.05,
+        0.28,
+        0.29
+      ]
+    },
+    "tree_stump_01": {
+      "url": "assets/models/tree_stump_01.glb",
+      "bytes": 696396,
+      "sourceTriangles": 41046,
+      "triangles": 4104,
+      "size": [
+        1.42,
+        1.59,
+        0.57
+      ]
+    }
+  },
+  "textures": {
+    "forrest_ground_01": {
+      "diff": "assets/textures/forrest_ground_01_diff.webp",
+      "nor_gl": "assets/textures/forrest_ground_01_nor_gl.webp",
+      "arm": "assets/textures/forrest_ground_01_arm.webp"
+    },
+    "brown_mud_leaves_01": {
+      "diff": "assets/textures/brown_mud_leaves_01_diff.webp",
+      "nor_gl": "assets/textures/brown_mud_leaves_01_nor_gl.webp",
+      "arm": "assets/textures/brown_mud_leaves_01_arm.webp"
+    }
+  },
+  "hdri": {
+    "citrus_orchard_puresky": {
+      "url": "assets/hdri/citrus_orchard_puresky_2k.hdr",
+      "bytes": 4876223
+    },
+    "belfast_sunset_puresky": {
+      "url": "assets/hdri/belfast_sunset_puresky_2k.hdr",
+      "bytes": 4563204
+    },
+    "studio_small_09": {
+      "url": "assets/hdri/studio_small_09_1k.hdr",
+      "bytes": 1615248
+    }
+  }
+}

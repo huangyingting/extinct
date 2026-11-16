@@ -4,7 +4,16 @@ Research and planning for a **browser-based 3D experience about extinct plants a
 
 The intended product is an interactive experience, not primarily a text encyclopedia. Possible experiences discussed so far include inspecting reconstructed organisms, exploring prehistoric habitats, and navigating geological time. The exact experience and target devices remain open decisions.
 
-**Status:** research documentation only. No application, deployment, benchmark, or licensed asset collection has been implemented.
+**Status:** research plus a minimal 3D prototype. Two reconstructed dinosaurs, *Tyrannosaurus rex* and *Triceratops horridus*, animate in a procedurally generated Hell Creek floodplain at morning and dusk. A third scene shows a Smithsonian fossil scan. PBDB fossil-record data and full asset provenance are shown in the app. See [prototype](docs/prototype.md) for what was built, how it was verified, and its limitations. Nothing has been deployed, frame rate on real hardware has not been measured, and no rights or scientific review has been done.
+
+## Quick start
+
+```bash
+npm install
+npm run dev        # open http://localhost:5173
+```
+
+Asset and data regeneration (Blender, gltf-transform, PBDB) is described in [docs/prototype.md](docs/prototype.md#running-it).
 
 ## Current technology recommendation
 
@@ -20,6 +29,7 @@ These are recommendations, not a finalized or implemented technology selection. 
 
 | Document | Contents |
 |---|---|
+| [Prototype](docs/prototype.md) | What was implemented, the asset pipeline, data handling, verification, and limitations |
 | [3D technology stack](docs/research/3d-technology-stack.md) | Current recommendation, architecture, engine tradeoffs, asset pipeline, performance priorities, and open decisions |
 | [Scientific data and licensing](docs/research/scientific-data-and-licensing.md) | GBIF, PBDB, IUCN, Commons, provenance, uncertainty, taxonomy, and reuse constraints |
 | [Reference experiences](docs/research/reference-experiences.md) | 3D Dinopedia, Ancient Earth, Smithsonian 3D, and Digital Atlas of Ancient Life |

@@ -1,0 +1,38 @@
+{
+  "name": "extinct",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Minimal 3D prototype: reconstructed Hell Creek dinosaurs in React Three Fiber",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "assets:fetch": "node pipeline/fetch-sources.mjs",
+    "assets:build": "node pipeline/build-assets.mjs",
+    "data:pbdb": "node pipeline/fetch-pbdb.mjs",
+    "verify:screens": "node pipeline/screenshot.mjs",
+    "measure:fps": "node pipeline/measure-fps.mjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "@react-three/postprocessing": "^3.2.2",
+    "postprocessing": "^6.39.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.187.0",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.5.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.187.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "playwright": "^1.65.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}
