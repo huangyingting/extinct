@@ -79,6 +79,66 @@
         "kind": "environment",
         "modifications": "Rescaled, textures resized and compressed, instanced as ground cover.",
         "rightsReview": "Uploader-asserted CC BY 4.0 ('fern made in treeit'). Not independently verified."
+      },
+      {
+        "id": "azhdarchid",
+        "uid": "5ef112b3208d4444a51e480beca56277",
+        "path": "glbs/000-113/5ef112b3208d4444a51e480beca56277.glb",
+        "sha256": "a58eca9afb14947f31919437057bd059ae344ed9890b78958b2797213ea1a29f",
+        "title": "Pterosaur_Quetzalcoatlus",
+        "creator": "seirogan",
+        "creatorUrl": "https://sketchfab.com/seirogan",
+        "sourceUrl": "https://sketchfab.com/3d-models/5ef112b3208d4444a51e480beca56277",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "reconstruction",
+        "modifications": "Seams welded, decimated from 600k to 24k triangles, scaled to a 5 m wingspan as a stand-in for the Hell Creek azhdarchid Infernodrakon; one clean wing stroke kept as the Flap loop and a level-wing frame as the Glide pose.",
+        "rightsReview": "Uploader-asserted CC BY 4.0; description says it was made by the uploader in Sculptris and Blender. A second upload by the same user shares the mesh; no uploads by other users. Not independently verified."
+      },
+      {
+        "id": "mosasaur",
+        "uid": "17a0332ed82b4383ae9fda9fa32b1080",
+        "path": "glbs/000-086/17a0332ed82b4383ae9fda9fa32b1080.glb",
+        "sha256": "397624aac953cde6d804f033dabbddf16e4c5d8f601bf69504c1b982a826950f",
+        "title": "Tylosaurus",
+        "creator": "FreddyFoxFreddy",
+        "creatorUrl": "https://sketchfab.com/FreddyFoxFreddy",
+        "sourceUrl": "https://sketchfab.com/3d-models/17a0332ed82b4383ae9fda9fa32b1080",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "reconstruction",
+        "modifications": "Decimated to 24k triangles, scaled to 12 m, spine rig (12 bones) and Swim/Idle clips added in Blender. Used as a stand-in for Mosasaurus hoffmannii; the skull shape differs.",
+        "rightsReview": "Uploader-asserted CC BY 4.0; description says the uploader made it as a test model for an IMAX film about 15 years before upload. No duplicate uploads found in Objaverse. Not independently verified."
+      },
+      {
+        "id": "champsosaurus",
+        "uid": "c6dc043870a843ae8a67ef4b8de85227",
+        "path": "glbs/000-005/c6dc043870a843ae8a67ef4b8de85227.glb",
+        "sha256": "4277b024610b9a33a2dc55e8c8171bcfa29e851605d2342ea04b65936d55523f",
+        "title": "Champsosaurus",
+        "creator": "cossus",
+        "creatorUrl": "https://sketchfab.com/cossus",
+        "sourceUrl": "https://sketchfab.com/3d-models/c6dc043870a843ae8a67ef4b8de85227",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "reconstruction",
+        "modifications": "Decimated to 14k triangles, scaled to 1.8 m, spine rig (12 bones) and Swim/Idle clips added in Blender.",
+        "rightsReview": "Uploader-asserted CC BY 4.0. The uploader publishes other palaeo reconstructions. No duplicate uploads found in Objaverse. Not independently verified."
+      },
+      {
+        "id": "alligator",
+        "uid": "9da4203cf820465eb9499df27b84c027",
+        "path": "glbs/000-135/9da4203cf820465eb9499df27b84c027.glb",
+        "sha256": "af0987108389a9e5391e15670d88212259f865bbd2578a21392805b4f5cd9a40",
+        "title": "American Alligator - Blender File",
+        "creator": "JeremyGrayson",
+        "creatorUrl": "https://sketchfab.com/JeremyGrayson",
+        "sourceUrl": "https://sketchfab.com/3d-models/9da4203cf820465eb9499df27b84c027",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "kind": "environment",
+        "modifications": "Re-oriented, decimated to 12k triangles, scaled to 2.6 m, spine rig (12 bones) and Swim/Idle clips added in Blender. A modern alligator used as a stand-in for the Hell Creek alligatoroid Brachychampsa.",
+        "rightsReview": "Uploader-asserted CC BY 4.0; description lists hand-painted maps by the uploader. No duplicate uploads found in Objaverse. Not independently verified."
       }
     ]
   },
@@ -87,23 +147,204 @@
     "license": "CC0 1.0",
     "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
     "items": [
-      { "id": "citrus_orchard_puresky", "type": "hdri", "res": "2k", "title": "Citrus Orchard (Pure Sky)", "creator": "Dimitrios Savva, Jarod Guest", "use": "Morning sky and image-based lighting" },
-      { "id": "belfast_sunset_puresky", "type": "hdri", "res": "2k", "title": "Belfast Sunset (Pure Sky)", "creator": "Dimitrios Savva, Greg Zaal, Jarod Guest", "use": "Dusk sky and image-based lighting" },
-      { "id": "studio_small_09", "type": "hdri", "res": "1k", "title": "Studio Small 09", "creator": "Sergej Majboroda", "use": "Gallery reflections for the fossil scan" },
-      { "id": "forrest_ground_01", "type": "texture", "res": "2k", "maps": ["diff"], "title": "Forest Ground 01", "creator": "Rob Tuytel", "use": "Bare-soil patches on the floodplain" },
-      { "id": "fern_02", "type": "model", "res": "1k", "title": "Fern 02", "creator": "Rob Tuytel, Rico Cilliers", "use": "Ground-cover fern" },
-      { "id": "dead_tree_trunk", "type": "model", "res": "1k", "title": "Dead Tree Trunk", "creator": "Rob Tuytel", "use": "Fallen log" },
-      { "id": "tree_stump_01", "type": "model", "res": "1k", "title": "Tree Stump 01", "creator": "Rob Tuytel", "use": "Stump" },
-      { "id": "kloofendal_48d_partly_cloudy_puresky", "type": "hdri", "res": "2k", "title": "Kloofendal 48d Partly Cloudy (Pure Sky)", "creator": "Greg Zaal, Jarod Guest", "use": "Midday sky for the floodplain forest scene" },
-      { "id": "qwantani_late_afternoon_puresky", "type": "hdri", "res": "2k", "title": "Qwantani Late Afternoon (Pure Sky)", "creator": "Greg Zaal, Jarod Guest", "use": "Late-afternoon sky for the impact-day scene" },
-      { "id": "wasteland_clouds_puresky", "type": "hdri", "res": "2k", "title": "Wasteland Clouds (Pure Sky)", "creator": "Jarod Guest, Sergej Majboroda", "use": "Dim overcast sky for the post-impact scene" },
-      { "id": "forest_leaves_02", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Forest Leaves 02", "creator": "Rob Tuytel", "use": "Humid floodplain floor: moss and leaf litter" },
-      { "id": "mud_forest", "type": "texture", "res": "2k", "maps": ["diff"], "title": "Mud Forest", "creator": "eye-candy.xyz", "use": "Wet river-bank mud" },
-      { "id": "jacaranda_tree", "type": "model", "res": "1k", "title": "Jacaranda Tree", "creator": "Rob Tuytel, Rico Cilliers", "use": "Stand-in for Hell Creek broadleaf (angiosperm) trees", "build": { "height": 17, "thinLeaves": { "keep": 0.02, "grow": 3.1 }, "sloppy": { "branches": 0.004, "trunk": 0.025 }, "variants": [{ "suffix": "_far", "thinLeaves": { "keep": 0.005, "grow": 5.5 }, "sloppy": { "branches": 0.0012, "trunk": 0.004 }, "textureSize": 512 }] } },
-      { "id": "shrub_02", "type": "model", "res": "1k", "title": "Shrub 02", "creator": "Rico Cilliers", "use": "Angiosperm undergrowth stand-in", "build": { "pick": "_c", "simplify": 0.5 } },
-      { "id": "pachira_aquatica_01", "type": "model", "res": "1k", "title": "Pachira Aquatica 01", "creator": "Rob Tuytel, Rico Cilliers", "use": "Broadleaf sapling stand-in for forest understory", "build": { "pick": "_d", "simplify": 0.15, "simplifyError": 0.01 } },
-      { "id": "dead_tree_trunk_02", "type": "model", "res": "1k", "title": "Dead Tree Trunk 02", "creator": "Jenelle van Heerden, Rico Cilliers", "use": "Driftwood and fallen trunks", "build": { "simplify": 0.05 } },
-      { "id": "root_cluster_01", "type": "model", "res": "1k", "title": "Root Cluster 01", "creator": "Jenelle van Heerden, Rico Cilliers", "use": "Eroded cut-bank roots along the channel", "build": { "simplify": 0.05 } }
+      {
+        "id": "citrus_orchard_puresky",
+        "type": "hdri",
+        "res": "2k",
+        "title": "Citrus Orchard (Pure Sky)",
+        "creator": "Dimitrios Savva, Jarod Guest",
+        "use": "Morning sky and image-based lighting"
+      },
+      {
+        "id": "belfast_sunset_puresky",
+        "type": "hdri",
+        "res": "2k",
+        "title": "Belfast Sunset (Pure Sky)",
+        "creator": "Dimitrios Savva, Greg Zaal, Jarod Guest",
+        "use": "Dusk sky and image-based lighting"
+      },
+      {
+        "id": "studio_small_09",
+        "type": "hdri",
+        "res": "1k",
+        "title": "Studio Small 09",
+        "creator": "Sergej Majboroda",
+        "use": "Gallery reflections for the fossil scan"
+      },
+      {
+        "id": "forrest_ground_01",
+        "type": "texture",
+        "res": "2k",
+        "maps": [
+          "diff"
+        ],
+        "title": "Forest Ground 01",
+        "creator": "Rob Tuytel",
+        "use": "Bare-soil patches on the floodplain"
+      },
+      {
+        "id": "fern_02",
+        "type": "model",
+        "res": "1k",
+        "title": "Fern 02",
+        "creator": "Rob Tuytel, Rico Cilliers",
+        "use": "Ground-cover fern"
+      },
+      {
+        "id": "dead_tree_trunk",
+        "type": "model",
+        "res": "1k",
+        "title": "Dead Tree Trunk",
+        "creator": "Rob Tuytel",
+        "use": "Fallen log"
+      },
+      {
+        "id": "tree_stump_01",
+        "type": "model",
+        "res": "1k",
+        "title": "Tree Stump 01",
+        "creator": "Rob Tuytel",
+        "use": "Stump"
+      },
+      {
+        "id": "kloofendal_48d_partly_cloudy_puresky",
+        "type": "hdri",
+        "res": "2k",
+        "title": "Kloofendal 48d Partly Cloudy (Pure Sky)",
+        "creator": "Greg Zaal, Jarod Guest",
+        "use": "Midday sky for the floodplain forest scene"
+      },
+      {
+        "id": "qwantani_late_afternoon_puresky",
+        "type": "hdri",
+        "res": "2k",
+        "title": "Qwantani Late Afternoon (Pure Sky)",
+        "creator": "Greg Zaal, Jarod Guest",
+        "use": "Late-afternoon sky for the impact-day scene"
+      },
+      {
+        "id": "wasteland_clouds_puresky",
+        "type": "hdri",
+        "res": "2k",
+        "title": "Wasteland Clouds (Pure Sky)",
+        "creator": "Jarod Guest, Sergej Majboroda",
+        "use": "Dim overcast sky for the post-impact scene"
+      },
+      {
+        "id": "forest_leaves_02",
+        "type": "texture",
+        "res": "2k",
+        "maps": [
+          "diff",
+          "nor_gl",
+          "arm"
+        ],
+        "title": "Forest Leaves 02",
+        "creator": "Rob Tuytel",
+        "use": "Humid floodplain floor: moss and leaf litter"
+      },
+      {
+        "id": "mud_forest",
+        "type": "texture",
+        "res": "2k",
+        "maps": [
+          "diff"
+        ],
+        "title": "Mud Forest",
+        "creator": "eye-candy.xyz",
+        "use": "Wet river-bank mud"
+      },
+      {
+        "id": "jacaranda_tree",
+        "type": "model",
+        "res": "1k",
+        "title": "Jacaranda Tree",
+        "creator": "Rob Tuytel, Rico Cilliers",
+        "use": "Stand-in for Hell Creek broadleaf (angiosperm) trees",
+        "build": {
+          "height": 17,
+          "thinLeaves": {
+            "keep": 0.02,
+            "grow": 3.1
+          },
+          "sloppy": {
+            "branches": 0.004,
+            "trunk": 0.025
+          },
+          "variants": [
+            {
+              "suffix": "_far",
+              "thinLeaves": {
+                "keep": 0.005,
+                "grow": 5.5
+              },
+              "sloppy": {
+                "branches": 0.0012,
+                "trunk": 0.004
+              },
+              "textureSize": 512
+            }
+          ]
+        }
+      },
+      {
+        "id": "shrub_02",
+        "type": "model",
+        "res": "1k",
+        "title": "Shrub 02",
+        "creator": "Rico Cilliers",
+        "use": "Angiosperm undergrowth stand-in",
+        "build": {
+          "pick": "_c",
+          "simplify": 0.5
+        }
+      },
+      {
+        "id": "pachira_aquatica_01",
+        "type": "model",
+        "res": "1k",
+        "title": "Pachira Aquatica 01",
+        "creator": "Rob Tuytel, Rico Cilliers",
+        "use": "Broadleaf sapling stand-in for forest understory",
+        "build": {
+          "pick": "_d",
+          "simplify": 0.15,
+          "simplifyError": 0.01
+        }
+      },
+      {
+        "id": "dead_tree_trunk_02",
+        "type": "model",
+        "res": "1k",
+        "title": "Dead Tree Trunk 02",
+        "creator": "Jenelle van Heerden, Rico Cilliers",
+        "use": "Driftwood and fallen trunks",
+        "build": {
+          "simplify": 0.05
+        }
+      },
+      {
+        "id": "root_cluster_01",
+        "type": "model",
+        "res": "1k",
+        "title": "Root Cluster 01",
+        "creator": "Jenelle van Heerden, Rico Cilliers",
+        "use": "Eroded cut-bank roots along the channel",
+        "build": {
+          "simplify": 0.05
+        }
+      },
+      {
+        "id": "coast_sand_01",
+        "type": "texture",
+        "res": "2k",
+        "maps": [
+          "diff"
+        ],
+        "title": "Coast Sand 01",
+        "creator": "Rob Tuytel",
+        "use": "Beach sand on the seaway coast"
+      }
     ]
   }
 }

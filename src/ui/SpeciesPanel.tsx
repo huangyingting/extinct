@@ -1,12 +1,15 @@
 import { useApp } from '../state';
 import { SPECIES, PBDB } from '../data/species';
 import { BarList } from './BarList';
+import { isFauna } from '../data/fauna';
+import { FaunaPanel } from './FaunaPanel';
 
 const ma = (value: number) => `${value} Ma`;
 
 export function SpeciesPanel() {
   const focus = useApp((s) => s.focus);
   const setPanel = useApp((s) => s.setPanel);
+  if (isFauna(focus)) return <FaunaPanel id={focus} />;
   const species = SPECIES[focus];
   const record = species.fossilRecord;
   const occurrences = record.occurrences;

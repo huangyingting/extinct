@@ -55,14 +55,14 @@ export function surgeLevel(t: number) {
  * `reflect` renders a true planar reflection; without it the water mirrors only the sky (environment map).
  * Hell Creek rivers carried a lot of fine sediment, so the water is a dull, silty brown-green.
  */
-export function Water({ tint = '#3a3a2c', reflect = true, surge = false }: { tint?: string; reflect?: boolean; surge?: boolean }) {
+export function Water({ tint = '#3a3a2c', reflect = true, surge = false, sea = false }: { tint?: string; reflect?: boolean; surge?: boolean; sea?: boolean }) {
   const normals = useMemo(() => rippleNormals(), []);
-  const normalScale = useMemo(() => new Vector2(0.18, 0.18), []);
+  const normalScale = useMemo(() => (sea ? new Vector2(0.32, 0.32) : new Vector2(0.18, 0.18)), [sea]);
   const mesh = useRef<Mesh>(null);
   const clock = useRef(0);
   useFrame((_, delta) => {
     clock.current += delta;
-    const speed = surge ? 3 : 1;
+    const speed = surge ? 3 : sea ? 2 : 1;
     normals.offset.x += delta * 0.006 * speed;
     normals.offset.y += delta * 0.011 * speed;
     if (surge && mesh.current) mesh.current.position.y = WATER_LEVEL + surgeLevel(clock.current);
@@ -80,6 +80,9 @@ export function Water({ tint = '#3a3a2c', reflect = true, surge = false }: { tin
         mirror={0.55}
         depthScale={0}
         color={tint}
+        transparent
+        opacity={0.86}
+        depthWrite={false}
         metalness={0.1}
         roughness={0.12}
         normalMap={normals}
@@ -88,7 +91,7 @@ export function Water({ tint = '#3a3a2c', reflect = true, surge = false }: { tin
         distortion={0.12}
       />
       ) : (
-        <meshStandardMaterial color={tint} metalness={0.9} roughness={0.08} normalMap={normals} normalScale={normalScale} />
+        <meshStandardMaterial color={tint} metalness={0.9} roughness={0.08} normalMap={normals} normalScale={normalScale} transparent opacity={0.9} depthWrite={false} />
       )}
     </mesh>
   );

@@ -45,6 +45,9 @@ interface Leg {
   restContact: Vector3;
   /** Hand/foot orientation relative to the animal at rest. */
   restEnd: Quaternion;
+  /** Upper plus lower limb length, and the height of the end bone above the contact point at rest. */
+  reach: number;
+  endAbove: number;
   planted: Vector3;
   swingFrom: Vector3;
   swingTo: Vector3;
@@ -79,6 +82,8 @@ function setWorldQuaternion(bone: Object3D, world: Quaternion) {
 export class LegGait {
   private legs: Leg[] = [];
   private cycle = 0;
+  /** Pelvis adjustment: how far the body is lowered so every foot target stays within reach. */
+  private drop = 0;
   private readonly spec: GaitSpec;
 
   constructor(model: Object3D, spec: GaitSpec, find: (name: string) => Object3D | null) {
@@ -96,6 +101,10 @@ export class LegGait {
         end,
         contact,
         restContact: model.worldToLocal(contact.getWorldPosition(new Vector3())),
+        reach:
+          upper.getWorldPosition(new Vector3()).distanceTo(lower.getWorldPosition(new Vector3())) +
+          lower.getWorldPosition(new Vector3()).distanceTo(end.getWorldPosition(new Vector3())),
+        endAbove: end.getWorldPosition(new Vector3()).y - contact.getWorldPosition(new Vector3()).y,
         restEnd: inverse.clone().multiply(end.getWorldQuaternion(new Quaternion())),
         planted: new Vector3(),
         swingFrom: new Vector3(),
@@ -178,8 +187,21 @@ export class LegGait {
         }
         leg.foot.copy(leg.planted);
       }
-      if (weight > 0.001) this.solve(leg, body, weight);
     }
+    // Pelvis adjustment (as in game IK rigs): the clip's body bob can lift the hips beyond the legs'
+    // reach, which drags a planted foot. Lower the body just enough that every target is reachable.
+    let needed = 0;
+    for (const leg of this.legs) {
+      leg.upper.getWorldPosition(_a);
+      _t.copy(leg.foot).setY(leg.foot.y + leg.endAbove);
+      needed = Math.max(needed, _a.distanceTo(_t) - leg.reach * 0.97);
+    }
+    this.drop = MathUtils.lerp(this.drop, Math.min(needed, 0.4), 1 - Math.exp(-dt * (needed > this.drop ? 20 : 4)));
+    if (this.drop > 0.001) {
+      body.position.y -= this.drop;
+      body.updateMatrixWorld(true);
+    }
+    if (weight > 0.001) for (const leg of this.legs) this.solve(leg, body, weight);
   }
 
   private solve(leg: Leg, body: Object3D, weight: number) {

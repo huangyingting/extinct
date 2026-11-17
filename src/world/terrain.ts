@@ -86,24 +86,64 @@ export function riverX(z: number): number {
   return -38 + 26 * Math.sin(z / 95) + 9 * Math.sin(z / 37 + 1.3);
 }
 
+/**
+ * Which landscape the height function describes. 'floodplain' is Hell Creek's river plain;
+ * 'coast' is the shore of the Western Interior Seaway, with the sea west of `coastX`.
+ * Set once per scene before anything samples the terrain (see OutdoorWorld).
+ */
+export type World = 'floodplain' | 'coast';
+let world: World = 'floodplain';
+export function setWorld(next: World) {
+  world = next;
+}
+
+/** X coordinate of the shoreline at a given Z (coast world); the sea lies at smaller X. */
+export function coastX(z: number): number {
+  return 40 + 30 * Math.sin(z / 160) + 10 * Math.sin(z / 53 + 0.7);
+}
+
+/**
+ * Distance from open water. On the floodplain this is the distance from the river centreline; on
+ * the coast it is offset so the shoreline sits where a river bank would (and is negative at sea),
+ * which lets the same placement rules keep plants off the beach and out of the water.
+ */
 export function riverDistance(x: number, z: number): number {
+  if (world === 'coast') return x - coastX(z) + RIVER_HALF_WIDTH;
   return Math.abs(x - riverX(z));
 }
 
-export function terrainHeight(x: number, z: number): number {
+function floodplainHeight(x: number, z: number): number {
   const relief = fbm(x / 240, z / 240) * 6 + fbm(x / 55 + 7, z / 55 - 3, 3) * 0.9;
-  const d = riverDistance(x, z);
+  const d = Math.abs(x - riverX(z));
   const halfWidth = RIVER_HALF_WIDTH + 4 * simplex(z / 70, 3.1);
   const bank = smoothstep(halfWidth * 0.55, halfWidth + 26, d);
   const floodplain = 0.4 + Math.max(relief, -1.5) * smoothstep(halfWidth, halfWidth + 120, d);
-  let h = -2.1 + (floodplain + 2.1) * bank;
+  return -2.1 + (floodplain + 2.1) * bank;
+}
+
+function coastHeight(x: number, z: number): number {
+  const d = x - coastX(z);
+  const relief = fbm(x / 240, z / 240) * 5 + fbm(x / 55 + 7, z / 55 - 3, 3) * 0.8;
+  // Sea floor shelving to about 14 m, a sandy beach, then low coastal plain.
+  const sea = Math.max(-14, -1.4 + d * 0.07) + fbm(x / 90, z / 90, 2) * 0.6;
+  const beach = -1.4 + 2.4 * smoothstep(-6, 45, d);
+  const land = 0.6 + Math.max(relief, -1) * smoothstep(40, 160, d);
+  if (d < 0) return Math.min(sea, beach);
+  return d < 45 ? beach : beach + (land - 1) * smoothstep(45, 90, d);
+}
+
+export function terrainHeight(x: number, z: number): number {
+  let h = world === 'coast' ? coastHeight(x, z) : floodplainHeight(x, z);
   const r = Math.hypot(x, z);
-  h += smoothstep(320, 720, r) * (28 + 34 * fbm(x / 300 - 11, z / 300 + 5, 3));
+  // Distant uplands, kept away from the sea on the coast.
+  const uplands = world === 'coast' ? smoothstep(150, 400, x - coastX(z)) : 1;
+  h += uplands * smoothstep(320, 720, r) * (28 + 34 * fbm(x / 300 - 11, z / 300 + 5, 3));
   return h;
 }
 
-/** 0 on dry ground, 1 on wet river-margin mud; used to blend ground textures. */
+/** 0 on dry ground, 1 on wet river-margin mud (floodplain) or wet beach sand (coast). */
 export function mudMask(x: number, z: number): number {
+  if (world === 'coast') return 1 - smoothstep(10, 40 + 8 * simplex(x / 30, z / 30), x - coastX(z));
   const d = riverDistance(x, z);
   return 1 - smoothstep(RIVER_HALF_WIDTH + 2, RIVER_HALF_WIDTH + 16 + 6 * simplex(x / 30, z / 30), d);
 }

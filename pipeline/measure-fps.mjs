@@ -33,7 +33,7 @@ try {
       const info = gl?.getExtension('WEBGL_debug_renderer_info');
       return info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : 'unknown';
     });
-    for (const scene of ['morning', 'forest', 'dusk', 'impact', 'aftermath']) {
+    for (const scene of ['coast', 'morning', 'forest', 'dusk', 'impact', 'aftermath']) {
       await page.goto(`http://localhost:${port}/?scene=${scene}&quality=${quality}&debug`);
       await page.waitForFunction(() => !document.querySelector('.loader'), null, { timeout: 180000 });
       await page.waitForTimeout(4000); // let shaders compile and the camera settle

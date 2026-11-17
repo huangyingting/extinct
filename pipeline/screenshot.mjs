@@ -35,7 +35,7 @@ try {
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
   // QUALITY=low captures the fallback tier that weak GPUs switch to.
   const quality = process.env.QUALITY ? `&quality=${process.env.QUALITY}` : '';
-  for (const name of ['morning', 'forest', 'dusk', 'impact', 'aftermath', 'fossil']) {
+  for (const name of ['coast', 'morning', 'forest', 'dusk', 'impact', 'aftermath', 'fossil']) {
     const shot = { name };
     await page.goto(`http://localhost:${port}/?scene=${name}${quality}`);
     await page.waitForFunction(() => !document.querySelector('.loader'), null, { timeout: 180000 });

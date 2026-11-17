@@ -4,10 +4,11 @@ Built **2026-11-16**; scenes, environment and motion reworked **2026-11-17**. A 
 
 ## What it is
 
-Six scenes in time order, set in the **Hell Creek Formation** at the end of the Cretaceous. *Tyrannosaurus rex* and *Triceratops horridus* are the two species with the most occurrences there in PBDB.
+Seven scenes in time order, set in the **Hell Creek Formation** and the underlying **Fox Hills Formation** at the end of the Cretaceous. *Tyrannosaurus rex* and *Triceratops horridus* are the two dinosaurs with the most occurrences in Hell Creek in PBDB. Four non-dinosaur reptiles share the scenes: an azhdarchid pterosaur, a mosasaur, *Champsosaurus* and an alligatoroid. Each one is labelled with the group it belongs to.
 
 | Timeline | Scene | Content |
 |---|---|---|
+| Maastrichtian, c. 68 Ma | Seaway coast | The shore of the Western Interior Seaway (Fox Hills Formation). Two mosasaurs cruise offshore and azhdarchid pterosaurs soar over the beach. No dinosaurs. |
 | Late Cretaceous, c. 66.1 Ma | Floodplain, morning | Three *Triceratops* walk and feed on a fern-covered floodplain by the river. A *T. rex* is on the far bank. |
 | | Floodplain forest, midday | A *T. rex* walks through a closed broadleaf and conifer stand. A *Triceratops* at the forest edge goes on alert when it comes near. |
 | | River margin, dusk | A *T. rex* patrols the channel bank. Two *Triceratops* are on the far side. |
@@ -49,7 +50,7 @@ This follows the research synthesis ([reference experiences](research/reference-
 | Object storage + CDN | **Not done.** Assets are served from `public/assets` by the static build. |
 | No backend initially | No backend |
 
-Post-processing (`@react-three/postprocessing`): N8AO ambient occlusion, bloom, AgX tone mapping and vignette.
+Post-processing (`@react-three/postprocessing`): N8AO ambient occlusion, a colour grade (contrast and saturation), bloom, Khronos PBR Neutral tone mapping and a light vignette.
 
 ## Running it
 
@@ -106,8 +107,12 @@ The jacaranda tree goes from 3.9 M source triangles to 56k (near) and 14k (`_far
 | *Triceratops* | 10.4k | 0.33 MB | Walk (source, 3.25 s), Graze 8 s, Alert 4 s |
 | Fossil mount scan | 120k | 4.9 MB | n/a |
 | Jacaranda tree (near / far) | 56k / 14k | 2.1 / 0.9 MB | n/a |
+| Azhdarchid pterosaur | 24k | 0.37 MB | Flap 0.96 s (one stroke from the source), Glide (held frame) |
+| Mosasaur (Tylosaurus sculpt) | 24k | 0.89 MB | Swim 2 s, Idle 6 s (authored) |
+| *Champsosaurus* | 14k | 0.25 MB | Swim 2 s, Idle 6 s (authored) |
+| Alligatoroid (modern alligator) | 12k | 0.21 MB | Swim 2 s, Idle 6 s (authored) |
 
-The whole `public/assets` folder is about 42 MB. The six HDRIs (25 MB) are the largest part, but each scene loads only its own sky.
+The whole `public/assets` folder is about 44 MB. The six HDRIs (25 MB) are the largest part, but each scene loads only its own sky.
 
 ### Choosing the models
 
@@ -162,7 +167,8 @@ The two dinosaur models were chosen from about 760 openly licensed dinosaur entr
 - Morning and dusk keep their raised elevations of about 25° and 15°.
 - Image-based light is kept low because the HDRI already contains the sun, which otherwise fills in every shadow.
 - Fog colour is matched to each sky's horizon.
-- A per-scene colour grade (tint and saturation, before tone mapping) warms the impact scene and desaturates the aftermath.
+- A colour grade before tone mapping: by default a little contrast and saturation; per scene it warms the impact and desaturates the aftermath.
+- **Why the scenes looked grey, and the fix (2026-11-17).** Several things stacked up: AgX tone mapping, which compresses highlights and saturation; exponential fog of 0.0024–0.0048 tinted with the grey horizon of hazy skies; low image-based light (0.3); exposure below 1; and a heavy vignette. Compared side by side on one frame, Khronos PBR Neutral kept the blue sky and warm clouds that AgX washed out, and ACES was contrasty but still greyed the sky. The app now uses Neutral, a slight contrast and saturation lift, about 30% less fog with a bluer aerial-perspective tint in the clear scenes, slightly more sky light, and a lighter vignette. `?tm=agx|aces|neutral` switches for comparison.
 
 ## Motion
 
@@ -199,6 +205,11 @@ Animals no longer run fixed walk/stop timers along a rigid curve. `src/scene/Din
 - The *Triceratops* step frequency was raised from 0.62 to 0.72 steps per second. At 0.62 its front feet fell up to 15 cm out of reach at the end of each stance and dragged.
 - During pauses a *Triceratops* alternates grazing with a head-up watch pose (a held frame of the Alert clip) and looks around.
 
+**Legs always on the planted-foot system, with pelvis adjustment (third pass):**
+- Blending the legs back to the clip poses whenever an animal stopped, grazed or reacted made its feet shuffle across the ground. The procedural legs now stay on at all times; standing feet stay where they last landed.
+- Syncing the walk clip to the step rhythm sped up the *Triceratops* body bob about 2.3×, lifting the hips beyond the legs' reach mid-stance and dragging the planted foot. As in game IK rigs, the body is now lowered just enough each frame that every foot target is reachable (up to 0.4 m).
+- `verify:motion` now reads stance directly from the gait system rather than guessing it from the lowest foot. It fails above a 0.05 m/s median or a 0.2 m/s 90th-percentile stance slip. After these fixes every animal in the morning, forest and dusk scenes measures 0 m/s on both.
+
 **Measured foot slip.** Horizontal speed of a planted foot while the body moves, 15 s per scene:
 
 | Animal | Before | After |
@@ -206,7 +217,47 @@ Animals no longer run fixed walk/stop timers along a rigid curve. `src/scene/Din
 | *Triceratops* (body ≈ 0.95 m/s) | median 1.17 m/s (feet skating faster than the body) | median 0–0.02 m/s |
 | *T. rex* (body ≈ 1.47 m/s) | n/a (previous speeds differed) | median 0.08 m/s with the clip legs; 0 m/s with procedural legs |
 
-`npm run verify:motion` repeats this check in the morning, forest and dusk scenes. It fails on a median planted-foot slip above 0.15 m/s, a *Triceratops* tail tip below 0.3 m, NaN transforms or page errors. Its first run caught the alert-deceleration slip and the front-foot reach problem described above.
+`npm run verify:motion` repeats this check in the morning, forest and dusk scenes, reading stance from the gait system. It fails on stance slip above 0.05 m/s (median) or 0.2 m/s (90th percentile), a *Triceratops* tail tip below 0.3 m, NaN transforms or page errors. Its runs caught the alert-deceleration slip, the front-foot reach problem and the hip-lift drag described above.
+
+## Pterosaurs and aquatic reptiles
+
+**Choosing the models.** I searched all 160 Objaverse metadata shards (about 800k Sketchfab entries) for pterosaurs, mosasaurs and plesiosaurs, crocodilians and choristoderes, and hadrosaurs, keeping CC BY, CC BY-SA and CC0 only. Candidates were then checked the same way as the dinosaurs.
+- **Rejected as likely redistributions:** a mosasaur and an animated alligator whose meshes match earlier uploads by other users (one of them licensed non-commercial), and a widely re-uploaded "Flying Pterodactyl".
+- **Rejected on other grounds:** a crocodile modelled on a company mascot; *Pteranodon*, *Deinosuchus* and *Dallasaurus*, which come from older rocks; and low-quality models.
+- **No usable Edmontosaurus,** the commonest Hell Creek dinosaur, was found: the only candidates were low-poly or bones.
+- The four chosen models are in `pipeline/sources.json` with checksums and rights notes.
+
+**Reference images.** 3D Dinopedia's species images were used only to compare proportions. They are copyrighted (Digital Pattern studio) and nothing from them is used in the app.
+
+**Blender build** (`pipeline/blender/build_creature.py`; Blender 4.2 LTS):
+- **Pterosaur.** The source was split into six 65k-vertex chunks. Decimating each chunk separately tore the mesh apart at the seams, so the chunks are joined and welded first. The source flight clip starts in an upright take-off pose and has irregular strokes. The script measures wing-tip height against the body over the clip, keeps one clean stroke (between successive highs) as *Flap*, and holds the frame with level wings as *Glide*.
+- **Swimmers** have no rig. The script:
+  1. bakes every transform (Sketchfab exports nested centimetre scales);
+  2. finds the body centreline by slicing along the body axis;
+  3. builds a 12-bone spine from the shoulders forward to the snout and back to the tail tip;
+  4. skins each vertex by its position along the body, blending the two nearest bones (more robust than Blender's heat weighting on these meshes);
+  5. authors *Swim*, a travelling wave growing towards the tail (tail-driven for the mosasaur and crocodilian, whole-body for *Champsosaurus*), and a slow floating *Idle*.
+
+**In the app** (`src/scene/Fauna.tsx`):
+- Swimmers follow loops in the river or sea, alternating swimming with drifting at the surface, where only the back and eyes show. Swim playback follows speed.
+- Pterosaurs soar on wide loops at about 11 m/s, banked by the coordinated-turn angle (tan φ = vω/g). They mostly glide, with short flapping bursts.
+- Every animal can be followed: the focus buttons list the dinosaurs and the other animals in the scene. The camera pulls in to suit the animal's size, and an information panel shows its group, what the model is, and its source.
+
+**What is shown where:**
+- *Champsosaurus* and the alligatoroid appear in the river scenes and after the impact; both groups survived.
+- The pterosaur appears in the pre-impact scenes only, because pterosaurs did not survive.
+- Mosasaurs appear only on the seaway coast.
+
+**Facts checked** (DOIs resolved on 2026-11-17):
+- *Infernodrakon hastacollis*, a medium-sized Hell Creek azhdarchid known from one neck vertebra (Thomas et al. 2024).
+- *Mosasaurus hoffmannii* from the Fox Hills Formation of South Dakota, 68.3–67.6 Ma (Harrell & Martin 2014).
+- *Champsosaurus* and *Brachychampsa* in the Hell Creek river fauna (Pearson et al. 2002).
+- A recollection of a 2025 "freshwater mosasaur from Hell Creek" paper could not be found and is not used.
+
+**The coast world.**
+- `setWorld('coast')` switches the shared height function to a shelving sea floor (to −14 m), a sand beach and a low coastal plain inland.
+- The same placement rules keep plants off the beach.
+- Water is slightly transparent everywhere (opacity 0.86), so animals just below the surface show through.
 
 ## Data
 

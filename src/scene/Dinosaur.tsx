@@ -589,11 +589,10 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     }
 
     // Legs: procedural planted-foot gait over the clip while walking (see legGait.ts).
-    // Legs stay on the planted-foot system whenever the body is moving, even under a one-shot clip,
-    // or the feet would slide while the animal decelerates.
-    const moving = smooth(s.speed / (gait.cruise * 0.25));
-    const legWeight = Math.max(walkWeight * (1 - actionWeight), moving, turningOnSpot ? 1 : 0);
-    bones.gait?.update(group, s.speed, dt, legWeight, turningOnSpot);
+    // The legs stay on the planted-foot system at all times: standing, grazing and during one-shot
+    // clips the feet stay where they last landed. Blending back to the clips' leg poses made the
+    // feet shuffle across the ground whenever an animal stopped or reacted.
+    bones.gait?.update(group, s.speed, dt, 1, turningOnSpot);
 
     // Spine bends into the turn.
     const bendAngle = MathUtils.clamp(s.yawRate * 1.1, -0.22, 0.22);

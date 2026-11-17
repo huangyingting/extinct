@@ -3,12 +3,13 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Environment, OrbitControls, Sparkles } from '@react-three/drei';
 import { Bloom, EffectComposer, N8AO, ToneMapping, Vignette } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
-import { Color, DirectionalLight, Euler, LinearSRGBColorSpace, Object3D, PerspectiveCamera, Vector3 } from 'three';
+import { Color, DirectionalLight, Euler, LinearSRGBColorSpace, MathUtils, Object3D, PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { OutdoorScene } from '../data/scenes';
-import { SPECIES } from '../data/species';
+import { focusSize } from '../data/fauna';
 import { leaders, useApp } from '../state';
-import { FOREST_CENTRE, terrainHeight } from '../world/terrain';
+import { FOREST_CENTRE, setWorld, terrainHeight } from '../world/terrain';
+import { Flyer, Swimmer } from './Fauna';
 import { Soundscape } from '../audio/Soundscape';
 import { Grade } from '../three/Grade';
 import { Birds } from './Birds';
@@ -17,6 +18,14 @@ import { ImpactSky } from './ImpactSky';
 import { Terrain } from './Terrain';
 import { Vegetation } from './Vegetation';
 import { Water } from './Water';
+
+// Khronos PBR Neutral keeps sky and foliage colour that AgX washed out (compared side by side on
+// 2026-11-17); `?tm=agx|aces|neutral` switches for comparison.
+const TONE_MAPPING = {
+  agx: ToneMappingMode.AGX,
+  aces: ToneMappingMode.ACES_FILMIC,
+  neutral: ToneMappingMode.NEUTRAL,
+}[new URLSearchParams(location.search).get('tm') ?? 'neutral'] ?? ToneMappingMode.NEUTRAL;
 
 /** Keeps the orbit target on the focused animal while preserving the user's orbit offset. */
 function CameraRig({ scene }: { scene: OutdoorScene }) {
@@ -29,7 +38,8 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
   const desired = useMemo(() => new Vector3(), []);
   const delta = useMemo(() => new Vector3(), []);
 
-  const hasAnimals = scene.animals.length > 0;
+  // Anything followable: dinosaurs or the other animals.
+  const hasAnimals = scene.animals.length > 0 || (scene.fauna?.length ?? 0) > 0;
   useEffect(() => {
     // Leaders register in their own effects, which run before this sibling's.
     const c = controls.current;
@@ -37,7 +47,7 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
     const leader = scene.camera.focus ? leaders.get(scene.camera.focus) : undefined;
     if (leader && scene.camera.focus) {
       c.target.copy(leader.position);
-      c.target.y += SPECIES[scene.camera.focus].model.heightM * 0.55;
+      c.target.y += focusSize(scene.camera.focus).height * 0.55;
     } else if (scene.camera.target) {
       const [tx, tz] = scene.camera.target;
       c.target.set(tx, terrainHeight(tx, tz) + 2.5, tz);
@@ -61,13 +71,25 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
     return () => perspective.clearViewOffset();
   }, [camera, panelOpen, size.width, size.height]);
 
+  // On switching to another animal, pull the camera in to a distance that suits its size.
+  const reframe = useRef(false);
+  useEffect(() => {
+    reframe.current = true;
+  }, [focus]);
+
   useFrame((_, dt) => {
     const c = controls.current;
     if (!c) return;
+    if (reframe.current && follow) {
+      const wanted = Math.max(focusSize(focus).length, 2) * 2.5 + 2;
+      const distance = camera.position.distanceTo(c.target);
+      if (Math.abs(distance - wanted) < 0.5) reframe.current = false;
+      else camera.position.sub(c.target).multiplyScalar(MathUtils.lerp(1, wanted / distance, Math.min(1, dt * 1.5))).add(c.target);
+    }
     const leader = hasAnimals ? leaders.get(focus) : undefined;
     if (follow && leader) {
       desired.copy(leader.position);
-      desired.y += SPECIES[focus].model.heightM * 0.55;
+      desired.y += focusSize(focus).height * 0.55;
       delta.copy(desired).sub(c.target).multiplyScalar(Math.min(1, dt * 2.5));
       c.target.add(delta);
       camera.position.add(delta);
@@ -77,7 +99,7 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
     c.update();
   });
 
-  const span = hasAnimals ? SPECIES[focus].model.lengthM : 10;
+  const span = hasAnimals ? Math.max(focusSize(focus).length, 3) : 10;
   return (
     <OrbitControls
       ref={controls}
@@ -142,13 +164,17 @@ function Exposure({ value }: { value: number }) {
 }
 
 export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
+  // Everything below samples the terrain, so select the landscape before the children render.
+  setWorld(scene.world ?? 'floodplain');
   const fogColor = useMemo(() => new Color().setRGB(...scene.fogColor, LinearSRGBColorSpace), [scene]);
   const focus = useApp((s) => s.focus);
   const low = useApp((s) => s.quality === 'low');
   const seenLeader = new Set<string>();
   const rotation = useMemo(() => new Euler(0, scene.skyRotation ?? 0, 0), [scene]);
   const birdCentre = useMemo<[number, number]>(() => (scene.habitat === 'forest' ? FOREST_CENTRE : [0, 0]), [scene]);
-  const grade = scene.grade && <Grade tint={scene.grade.tint} saturation={scene.grade.saturation} />;
+  // A little contrast and saturation by default; scenes override (the aftermath desaturates).
+  const g = { tint: '#ffffff', saturation: 0.1, contrast: 0.08, ...scene.grade };
+  const grade = <Grade tint={g.tint} saturation={g.saturation} contrast={g.contrast} />;
   return (
     <>
       <Exposure value={scene.exposure} />
@@ -162,8 +188,8 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
       />
       <fogExp2 attach="fog" args={[fogColor, scene.fogDensity]} />
       <Sun scene={scene} key={low ? 'low' : 'high'} mapSize={low ? 2048 : 4096} />
-      <Terrain clay={scene.boundaryClay ?? 0} />
-      <Water tint={scene.waterTint} reflect={!low} surge={scene.impact} />
+      <Terrain clay={scene.boundaryClay ?? 0} wet={scene.world === 'coast' ? 'sand' : 'mud'} />
+      <Water tint={scene.waterTint} reflect={!low} surge={scene.impact} sea={scene.world === 'coast'} />
       <Vegetation scene={scene} />
       {scene.animals.map((animal) => {
         const leader = !seenLeader.has(animal.species);
@@ -181,6 +207,11 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
           />
         );
       })}
+      {scene.fauna?.map((f, i) => {
+        const Component = f.fauna === 'azhdarchid' ? Flyer : Swimmer;
+        const leader = scene.fauna!.findIndex((other) => other.fauna === f.fauna) === i;
+        return <Component key={`${scene.id}-${f.key}`} id={`${scene.id}-${f.key}`} fauna={f.fauna} path={f.path} start={f.start} speed={f.speed} level={f.level} leader={leader} />;
+      })}
       {scene.particles === 'spores' && scene.animals.length > 0 && <FocusSparkles focus={focus} />}
       {scene.impact && <ImpactSky />}
       <Soundscape scene={scene} />
@@ -190,16 +221,16 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
         <EffectComposer key="low" multisampling={0}>
           <>{grade}</>
           <Bloom mipmapBlur luminanceThreshold={1.1} intensity={scene.impact ? 0.8 : 0.35} />
-          <ToneMapping mode={ToneMappingMode.AGX} />
-          <Vignette offset={0.22} darkness={0.55} />
+          <ToneMapping mode={TONE_MAPPING} />
+          <Vignette offset={0.25} darkness={0.45} />
         </EffectComposer>
       ) : (
         <EffectComposer key="high" multisampling={4}>
           <N8AO aoRadius={2.5} distanceFalloff={1.2} intensity={2.2} halfRes />
           <>{grade}</>
           <Bloom mipmapBlur luminanceThreshold={1.1} intensity={scene.impact ? 0.8 : 0.35} />
-          <ToneMapping mode={ToneMappingMode.AGX} />
-          <Vignette offset={0.22} darkness={0.55} />
+          <ToneMapping mode={TONE_MAPPING} />
+          <Vignette offset={0.25} darkness={0.45} />
         </EffectComposer>
       )}
     </>

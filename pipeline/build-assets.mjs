@@ -24,10 +24,16 @@ const objaverse = (id) => join(cache, 'sources', 'objaverse', `${id}.glb`);
 const polyhaven = (id) => join(cache, 'sources', 'polyhaven', id, `${id}.gltf`);
 
 // job: Blender job name (see pipeline/blender/build_asset.py); size: max texture size.
+const only = new Set(process.argv.slice(2));
 const models = [
   { id: 'trex', job: 'trex', source: objaverse('trex'), size: 2048 },
   { id: 'triceratops', job: 'triceratops', source: objaverse('triceratops'), size: 2048 },
   { id: 'fossil-mount', job: 'fossil', source: objaverse('fossil-mount'), size: 2048 },
+  // Non-dinosaur reptiles (pipeline/blender/build_creature.py).
+  { id: 'azhdarchid', job: 'creature:azhdarchid', source: objaverse('azhdarchid'), size: 1024 },
+  { id: 'mosasaur', job: 'creature:mosasaur', source: objaverse('mosasaur'), size: 1024 },
+  { id: 'champsosaurus', job: 'creature:champsosaurus', source: objaverse('champsosaurus'), size: 1024 },
+  { id: 'alligator', job: 'creature:alligator', source: objaverse('alligator'), size: 1024 },
   { id: 'bald-cypress', job: 'prop', source: objaverse('bald-cypress'), size: 1024 },
   { id: 'fern-treeit', job: 'prop', source: objaverse('fern-treeit'), size: 1024 },
   { id: 'fern_02', job: 'prop', source: polyhaven('fern_02'), size: 1024 },
@@ -41,14 +47,17 @@ const bytes = async (path) => (await stat(path)).size;
 await mkdir(join(cache, 'build'), { recursive: true });
 for (const dir of ['models', 'hdri', 'textures']) await mkdir(join(out, dir), { recursive: true });
 
-const generated = { models: {}, textures: {}, hdri: {} };
+const generatedPath = join(root, 'src', 'data', 'generated', 'assets.json');
+const generated = only.size ? JSON.parse(await readFile(generatedPath, 'utf8')) : { models: {}, textures: {}, hdri: {} };
 
-for (const model of models) {
+// Optional ids on the command line rebuild only those models (merged into the existing assets.json).
+for (const model of models.filter((m) => only.size === 0 || only.has(m.id))) {
   const intermediate = join(cache, 'build', `${model.id}.glb`);
   const reportPath = join(cache, 'build', `${model.id}.json`);
   const final = join(out, 'models', `${model.id}.glb`);
   console.log(`blender: ${model.id}`);
-  run(blender, ['-b', '--python', join(root, 'pipeline', 'blender', 'build_asset.py'), '--', model.job, model.source, intermediate, reportPath]);
+  const [script, job] = model.job.startsWith('creature:') ? ['build_creature.py', model.job.slice(9)] : ['build_asset.py', model.job];
+  run(blender, ['-b', '--python', join(root, 'pipeline', 'blender', script), '--', job, model.source, intermediate, reportPath]);
   console.log(`gltf-transform: ${model.id}`);
   run(gltfTransform, [
     'optimize', intermediate, final,
@@ -66,7 +75,7 @@ for (const model of models) {
   };
 }
 
-for (const item of sources.polyhaven.items) {
+for (const item of only.size ? [] : sources.polyhaven.items) {
   const dir = join(cache, 'sources', 'polyhaven', item.id);
   if (item.type === 'hdri') {
     const name = `${item.id}_${item.res}.hdr`;
@@ -87,5 +96,5 @@ for (const item of sources.polyhaven.items) {
 }
 
 await mkdir(join(root, 'src', 'data', 'generated'), { recursive: true });
-await writeFile(join(root, 'src', 'data', 'generated', 'assets.json'), `${JSON.stringify(generated, null, 2)}\n`);
+await writeFile(generatedPath, `${JSON.stringify(generated, null, 2)}\n`);
 console.log('assets written to public/assets and src/data/generated/assets.json');

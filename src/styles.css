@@ -131,3 +131,6 @@ button.icon { border: none; background: none; font-size: 22px; line-height: 1; p
 .scene-fade { position: absolute; inset: 0; background: #0b0c0e; pointer-events: none; animation: scene-fade 1.6s ease-out 0.2s forwards; }
 @keyframes scene-fade { to { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .scene-fade { animation-duration: 0.01s; } }
+
+.empty-note { position: absolute; left: 26px; bottom: 78px; max-width: 560px; background: var(--surface-glass); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: 13px; line-height: 1.5; }
+.empty-note p { margin: 0; }

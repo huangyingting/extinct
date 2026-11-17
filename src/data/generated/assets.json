@@ -165,6 +165,62 @@
         17,
         16.5
       ]
+    },
+    "azhdarchid": {
+      "url": "assets/models/azhdarchid.glb",
+      "bytes": 367600,
+      "wingspan": 5,
+      "length": 1.5,
+      "height": 3.99,
+      "clips": {
+        "Flap": 0.958,
+        "Glide": 0.042
+      },
+      "flapFrames": [
+        36,
+        59
+      ],
+      "glideFrame": 86,
+      "triangles": 23999
+    },
+    "mosasaur": {
+      "url": "assets/models/mosasaur.glb",
+      "bytes": 885088,
+      "length": 12.01,
+      "height": 1.63,
+      "width": 3.85,
+      "clips": {
+        "Swim": 2,
+        "Idle": 6
+      },
+      "triangles": 23996,
+      "bones": 12
+    },
+    "champsosaurus": {
+      "url": "assets/models/champsosaurus.glb",
+      "bytes": 254408,
+      "length": 1.8,
+      "height": 0.17,
+      "width": 0.52,
+      "clips": {
+        "Swim": 2,
+        "Idle": 6
+      },
+      "triangles": 13998,
+      "bones": 12
+    },
+    "alligator": {
+      "url": "assets/models/alligator.glb",
+      "bytes": 211624,
+      "length": 2.6,
+      "height": 0.45,
+      "width": 0.65,
+      "clips": {
+        "Swim": 2,
+        "Idle": 6
+      },
+      "triangles": 11999,
+      "bones": 12
     }
   },
   "textures": {
@@ -178,6 +234,9 @@
     },
     "mud_forest": {
       "diff": "assets/textures/mud_forest_diff.webp"
+    },
+    "coast_sand_01": {
+      "diff": "assets/textures/coast_sand_01_diff.webp"
     }
   },
   "hdri": {

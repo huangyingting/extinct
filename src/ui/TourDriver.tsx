@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { SCENE_ORDER, SCENES } from '../data/scenes';
+import { defaultFocus, SCENE_ORDER, SCENES } from '../data/scenes';
+import type { FocusId } from '../data/fauna';
 import { useApp } from '../state';
 
 const FOCUS_SECONDS = 18;
@@ -12,7 +13,7 @@ export function TourDriver() {
   useEffect(() => {
     if (!tour) return;
     const config = SCENES[scene];
-    const species = config.kind === 'outdoor' ? [...new Set(config.animals.map((a) => a.species))] : [];
+    const species: FocusId[] = config.kind === 'outdoor' ? [...new Set<FocusId>([...config.animals.map((a) => a.species), ...(config.fauna ?? []).map((f) => f.fauna)])] : [];
     const focusTimer = window.setInterval(() => {
       if (species.length < 2) return;
       const { focus, setFocus } = useApp.getState();
@@ -20,8 +21,7 @@ export function TourDriver() {
     }, FOCUS_SECONDS * 1000);
     const sceneTimer = window.setTimeout(() => {
       const next = SCENE_ORDER[(SCENE_ORDER.indexOf(scene) + 1) % SCENE_ORDER.length];
-      const nextConfig = SCENES[next];
-      useApp.getState().setScene(next, nextConfig.kind === 'outdoor' ? nextConfig.camera.focus : undefined);
+      useApp.getState().setScene(next, defaultFocus(next));
     }, SCENE_SECONDS * 1000);
     return () => {
       window.clearInterval(focusTimer);

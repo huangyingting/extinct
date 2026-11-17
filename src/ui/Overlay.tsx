@@ -1,6 +1,7 @@
 import { useProgress } from '@react-three/drei';
-import { SCENES, TIMELINE } from '../data/scenes';
-import { SPECIES, type SpeciesId } from '../data/species';
+import { defaultFocus, SCENES, TIMELINE } from '../data/scenes';
+import { SPECIES } from '../data/species';
+import { FAUNA, focusLabel, isFauna, type FocusId } from '../data/fauna';
 import { useApp, type Behaviour } from '../state';
 import { CreditsPanel } from './CreditsPanel';
 import { ScenePanel } from './ScenePanel';
@@ -30,8 +31,13 @@ export function Overlay() {
   const { setScene, setFocus, setFollow, setBehaviour, triggerAction, setPanel, setSound, setTour } = useApp();
   const config = SCENES[scene];
   const outdoor = config.kind === 'outdoor';
-  const animals = outdoor && config.animals.length > 0;
-  const present = new Set(outdoor ? config.animals.map((a) => a.species) : []);
+  const dinosaurs = outdoor && config.animals.length > 0;
+  // Followable subjects: dinosaur species first, then the other animals in the scene.
+  const subjects: FocusId[] = outdoor
+    ? [...new Set<FocusId>([...config.animals.map((a) => a.species), ...(config.fauna ?? []).map((f) => f.fauna)])]
+    : [];
+  const animals = subjects.length > 0;
+  const dinosaurFocus = !isFauna(focus) && dinosaurs && subjects.includes(focus);
 
   return (
     <div className="overlay">
@@ -39,7 +45,7 @@ export function Overlay() {
       <div className="scene-fade" key={scene} aria-hidden />
       <TourDriver />
       <header className="title">
-        <p className="eyebrow">Extinct · Hell Creek Formation · {config.era}</p>
+        <p className="eyebrow">Extinct · {config.formation ?? 'Hell Creek Formation'} · {config.era}</p>
         <h1>{config.title}</h1>
         <p className="muted">{config.subtitle}</p>
         <nav className="timeline" aria-label="Scenes in time order">
@@ -54,8 +60,7 @@ export function Overlay() {
                     aria-pressed={id === scene}
                     title={`${SCENES[id].title} · ${SCENES[id].era}`}
                     onClick={() => {
-                      const next = SCENES[id];
-                      setScene(id, next.kind === 'outdoor' ? next.camera.focus : undefined);
+                      setScene(id, defaultFocus(id));
                     }}
                   >
                     {SCENES[id].short}
@@ -67,23 +72,31 @@ export function Overlay() {
         </nav>
       </header>
 
+      {outdoor && !dinosaurs && config.emptyNote && (
+        <div className="empty-note">
+          <p>{config.emptyNote}</p>
+        </div>
+      )}
+
       {animals && (
         <div className="controls" role="group" aria-label="Animal controls">
-          <div className="segmented" aria-label="Focus species">
-            {(Object.keys(SPECIES) as SpeciesId[]).filter((id) => present.has(id)).map((id) => (
-              <button key={id} className={id === focus ? 'active' : ''} aria-pressed={id === focus} onClick={() => setFocus(id)}>
-                <i>{SPECIES[id].scientificName.split(' ')[0]}</i>
+          <div className="segmented" aria-label="Follow animal">
+            {subjects.map((id) => (
+              <button key={id} className={id === focus ? 'active' : ''} aria-pressed={id === focus} onClick={() => setFocus(id)} title={isFauna(id) ? FAUNA[id].group : undefined}>
+                {isFauna(id) ? focusLabel(id) : <i>{focusLabel(id)}</i>}
               </button>
             ))}
           </div>
-          <div className="segmented" aria-label="Behaviour">
-            {BEHAVIOURS.map((b) => (
-              <button key={b.id} className={b.id === behaviour ? 'active' : ''} aria-pressed={b.id === behaviour} onClick={() => setBehaviour(b.id)}>
-                {b.label}
-              </button>
-            ))}
-          </div>
-          <button className="primary" onClick={triggerAction}>{SPECIES[focus].actionLabel}</button>
+          {dinosaurFocus && (
+            <div className="segmented" aria-label="Behaviour">
+              {BEHAVIOURS.map((b) => (
+                <button key={b.id} className={b.id === behaviour ? 'active' : ''} aria-pressed={b.id === behaviour} onClick={() => setBehaviour(b.id)}>
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          )}
+          {dinosaurFocus && !isFauna(focus) && <button className="primary" onClick={triggerAction}>{SPECIES[focus].actionLabel}</button>}
           <label className="toggle">
             <input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} /> Follow
           </label>
@@ -101,14 +114,6 @@ export function Overlay() {
         </div>
       )}
 
-      {outdoor && !animals && (
-        <div className="controls fossil-note">
-          <p>
-            <strong>No dinosaurs here.</strong> Non-avian dinosaurs do not occur above the boundary clay. Open the scene
-            notes for what this landscape is based on.
-          </p>
-        </div>
-      )}
 
       <div className="corner">
         <button aria-pressed={tour} className={tour ? 'active' : ''} onClick={() => setTour(!tour)} title="Slow camera orbit through every scene; drag to take over">

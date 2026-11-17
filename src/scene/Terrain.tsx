@@ -132,14 +132,14 @@ function buildMaterial(textures: Record<string, Texture>, clay: number) {
   return material;
 }
 
-export function Terrain({ clay = 0 }: { clay?: number }) {
+export function Terrain({ clay = 0, wet = 'mud' }: { clay?: number; wet?: 'mud' | 'sand' }) {
   const t = assets.textures;
   const textures = useTexture({
     litterDiff: t.forest_leaves_02.diff,
     litterNormal: t.forest_leaves_02.nor_gl,
     litterArm: t.forest_leaves_02.arm,
     soilDiff: t.forrest_ground_01.diff,
-    mudDiff: t.mud_forest.diff,
+    mudDiff: wet === 'sand' ? t.coast_sand_01.diff : t.mud_forest.diff,
   });
   const geometry = useMemo(buildGeometry, []);
   const material = useMemo(() => buildMaterial(textures, clay), [textures, clay]);
