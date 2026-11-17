@@ -4,6 +4,7 @@ import { SPECIES, type SpeciesId } from '../data/species';
 import { useApp, type Behaviour } from '../state';
 import { CreditsPanel } from './CreditsPanel';
 import { ScenePanel } from './ScenePanel';
+import { TourDriver } from './TourDriver';
 import { FpsMeter } from './FpsMeter';
 import { SpeciesPanel } from './SpeciesPanel';
 
@@ -25,8 +26,8 @@ function Loader() {
 }
 
 export function Overlay() {
-  const { scene, focus, follow, behaviour, panel } = useApp();
-  const { setScene, setFocus, setFollow, setBehaviour, triggerAction, setPanel } = useApp();
+  const { scene, focus, follow, behaviour, panel, sound, tour } = useApp();
+  const { setScene, setFocus, setFollow, setBehaviour, triggerAction, setPanel, setSound, setTour } = useApp();
   const config = SCENES[scene];
   const outdoor = config.kind === 'outdoor';
   const animals = outdoor && config.animals.length > 0;
@@ -34,6 +35,9 @@ export function Overlay() {
 
   return (
     <div className="overlay">
+      {/* Each scene fades in from black. */}
+      <div className="scene-fade" key={scene} aria-hidden />
+      <TourDriver />
       <header className="title">
         <p className="eyebrow">Extinct · Hell Creek Formation · {config.era}</p>
         <h1>{config.title}</h1>
@@ -107,6 +111,14 @@ export function Overlay() {
       )}
 
       <div className="corner">
+        <button aria-pressed={tour} className={tour ? 'active' : ''} onClick={() => setTour(!tour)} title="Slow camera orbit through every scene; drag to take over">
+          {tour ? 'Stop tour' : 'Tour'}
+        </button>
+        {outdoor && (
+          <button aria-pressed={sound} onClick={() => setSound(!sound)} title="Synthesised wind, water, insects and impact rumble; no dinosaur calls">
+            {sound ? 'Sound on' : 'Sound off'}
+          </button>
+        )}
         {panel !== 'scene' && <button onClick={() => setPanel('scene')}>Scene notes</button>}
         {animals && panel !== 'species' && <button onClick={() => setPanel('species')}>Species info</button>}
         <button onClick={() => setPanel(panel === 'credits' ? null : 'credits')}>Sources &amp; credits</button>

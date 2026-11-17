@@ -69,6 +69,7 @@ npm run assets:build:polyhaven            # only the Poly Haven models, textures
 npm run data:pbdb         # refresh src/data/generated/pbdb.json from the PBDB API
 npm run build && npm run verify:screens   # headless Chrome screenshots of all six scenes -> .cache/screens
 npm run measure:fps       # frame times and triangles/draw calls per scene and quality tier
+npm run verify:motion     # planted-foot slip, tail clearance and NaN check (fails on regression)
 ```
 
 ## Asset pipeline
@@ -137,6 +138,21 @@ The two dinosaur models were chosen from about 760 openly licensed dinosaur entr
 - About 400 instanced streaks re-entering at shallow angles from bearing 156°, the direction of Chicxulub from the Hell Creek area. The world's compass is set so the late-afternoon sun sits in the west-south-west.
 - A fall of glass spherules around the camera, a few still glowing.
 
+**Distant trees are impostors** (`src/three/impostor.ts`). Each tree model is rendered once, side-on, into a 512² texture when the scene loads. Copies are then drawn as instanced quads that turn about the vertical axis to face the camera, mirrored at random, with brightness variation and scene fog. They cover trees beyond about 220 m in every habitat and the outer forest (beyond 100 m from its centre). The low-quality tier used to drop the horizon trees altogether; it now keeps them.
+
+**Birds** (`src/scene/Birds.tsx`). Small flocks circle, glide and flap in every scene except the impact. They are generic dark silhouettes of about 0.9 m wingspan: Hell Creek birds, enantiornithines and early relatives of modern birds, are known mostly from fragments. After the impact, the few birds stand for the dinosaur lineage that survived.
+
+**Sound** (`src/audio/`), off by default. It is synthesised with the Web Audio API, so there are no audio files or licences:
+- Gusting wind, and a river that gets louder near the water and surges with the seiche.
+- Katydid-like stridulation chirps. Orthopteran stridulation is known from Jurassic fossils.
+- In the impact scene, a low rumble with distant booms.
+- No dinosaur calls, because their voices are unknown.
+- Levels were checked headlessly with an analyser node (RMS −17 to −31 dB per scene), not by ear.
+
+**Tour and transitions.**
+- *Tour* slowly orbits the camera, switches the followed species every 18 s, and moves to the next scene every 45 s. Dragging the view ends it.
+- Each scene fades in from black.
+
 **Lighting:**
 - Each outdoor scene is lit by a CC0 Poly Haven sky HDRI plus a shadow-casting sun.
 - The sun direction comes from each HDRI's brightest pixel, using three.js's equirectangular mapping. The method reproduces the original morning and dusk azimuths (74°, 38°).
@@ -168,7 +184,7 @@ Animals no longer run fixed walk/stop timers along a rigid curve. `src/scene/Din
 
 **Triceratops tail and legs:**
 - **Tail lifted.** In the source walk the tail tip drops to 0.0–0.7 m and scrapes the ground. It is now held at 0.65–1.3 m. Dinosaur trackways rarely show tail drags.
-- **Procedural legs** (`src/scene/quadrupedGait.ts`). Sampling the source walk deterministically showed that each foot is planted for only 8–16% of the cycle, and that the front feet sweep back 1.8–2.2 m/s against 0.5–0.9 m/s for the hind feet. No single playback rate could keep all four feet still.
+- **Procedural legs** (`src/scene/legGait.ts`). Sampling the source walk deterministically showed that each foot is planted for only 8–16% of the cycle, and that the front feet sweep back 1.8–2.2 m/s against 0.5–0.9 m/s for the hind feet. No single playback rate could keep all four feet still.
   - While walking, the legs follow a lateral-sequence walk (LH, LF, RH, RF; duty factor 0.65).
   - Planted feet stay fixed in world space. Swinging feet arc to a landing point on the terrain that is re-aimed during the swing.
   - Each leg is solved with two-bone IK that keeps the clip's knee and elbow bend plane. The foot keeps its rest orientation.
@@ -176,12 +192,21 @@ Animals no longer run fixed walk/stop timers along a rigid curve. `src/scene/Din
 
 `?noproc` turns the procedural layers off to compare against the raw clips. `?debug` exposes the renderer (`window.__three`) and each animal's mixer and state (`window.__dinos`) for headless measurement.
 
+**T. rex legs, turning and pauses (2026-11-17, second pass):**
+- *T. rex* now uses the same planted-foot system with two legs: duty factor 0.6 and about 0.42 steps per second per leg at cruise. That gives a stride of about 3.7 m, close to the ~3.9 m implied by the preferred-speed estimate (1.28 m/s at 0.33 Hz). The source walk clip still supplies body, arm and tail rhythm, with its playback rate synced to the step frequency.
+- Both species turn sharp corners mostly on the spot, stepping round. Before, they could only turn while walking forward.
+- Legs stay on the planted-foot system whenever the body is moving, including under a one-shot clip. Otherwise the feet slid while an alerted *Triceratops* slowed down.
+- The *Triceratops* step frequency was raised from 0.62 to 0.72 steps per second. At 0.62 its front feet fell up to 15 cm out of reach at the end of each stance and dragged.
+- During pauses a *Triceratops* alternates grazing with a head-up watch pose (a held frame of the Alert clip) and looks around.
+
 **Measured foot slip.** Horizontal speed of a planted foot while the body moves, 15 s per scene:
 
 | Animal | Before | After |
 |---|---|---|
 | *Triceratops* (body ≈ 0.95 m/s) | median 1.17 m/s (feet skating faster than the body) | median 0–0.02 m/s |
-| *T. rex* (body ≈ 1.47 m/s) | n/a (previous speeds differed) | median 0.08 m/s |
+| *T. rex* (body ≈ 1.47 m/s) | n/a (previous speeds differed) | median 0.08 m/s with the clip legs; 0 m/s with procedural legs |
+
+`npm run verify:motion` repeats this check in the morning, forest and dusk scenes. It fails on a median planted-foot slip above 0.15 m/s, a *Triceratops* tail tip below 0.3 m, NaN transforms or page errors. Its first run caught the alert-deceleration slip and the front-foot reach problem described above.
 
 ## Data
 
@@ -202,16 +227,16 @@ On 2026-11-17 the build VM had an NVIDIA A100, used through headless Chromium wi
 - **A bug fixed during the rework.** The impact streak shader could output NaN, from `pow()` of a slightly negative interpolated value. Bloom smeared the NaN over the whole frame and turned it black. After the fix, 450 sampled frames across the forest, impact and aftermath scenes had no black frames, and no NaN transforms appeared in 600 frames of scene-graph checks.
 - **Render cost** at 1920×1080, averaged over 10 animation frames with `renderer.info`, all passes included. The original build was measured the same way on the same machine.
 
-  | Scene | Triangles / frame (high) | Draw calls | Low tier |
-  |---|---|---|---|
-  | Morning (original build) | 4.15 M | 425 | |
-  | Morning | 4.78 M | 491 | 1.60 M |
-  | Forest | 5.96 M | 371 | 2.16 M |
-  | Dusk (original build) | 3.28 M | 442 | |
-  | Dusk | 3.26 M | 423 | 1.21 M |
-  | Impact | 4.63 M | 467 | 1.44 M |
-  | After the impact | 4.24 M | 316 | 1.63 M |
-  | Fossil | 0.84 M | 83 | 0.84 M |
+  | Scene | Original build | First rework | With impostors | Draw calls now | Low tier now |
+  |---|---|---|---|---|---|
+  | Morning | 4.15 M | 4.78 M | 3.97 M | 278 | 1.58 M |
+  | Forest | | 5.96 M | 5.00 M | 243 | 2.17 M |
+  | Dusk | 3.28 M | 3.26 M | 2.61 M | 237 | 1.21 M |
+  | Impact | | 4.63 M | 3.93 M | 272 | 1.44 M |
+  | After the impact | | 4.24 M | 4.07 M | 228 | 1.63 M |
+  | Fossil | 0.84 M | 0.84 M | 0.84 M | 83 | 0.84 M |
+
+  Draw calls in the morning scene went from 491 to 278.
 
   On the A100 every scene held a 16.7 ms median frame (vsync-limited 60 fps). That says nothing about integrated GPUs.
 - Vegetation is instanced in 60 m spatial chunks so off-screen chunks are culled in every pass. Small plants are also hidden per chunk beyond 55–110 m from the camera.
@@ -222,7 +247,8 @@ On 2026-11-17 the build VM had an NVIDIA A100, used through headless Chromium wi
 - **Frame rate on consumer hardware has not been measured.** Rendering was verified on a data-centre GPU (A100) and earlier in software (SwiftShader); neither predicts integrated-GPU or mobile performance. The scene is heavy for integrated GPUs: about 3.3–3.6 M triangles and 380–405 draw calls per frame, including shadow, water-reflection and AO passes. `PerformanceMonitor` lowers the resolution if frame rate drops, and on sustained drops switches to a **low-quality tier**, which can also be forced with `?quality=low`. That tier keeps half the ferns, removes the far forest, replaces the planar water reflection with sky-only reflection, removes AO and MSAA, and uses a 2k shadow map. It measured 1.6 M / 1.3 M triangles and 153 / 137 draw calls per frame (morning / dusk), with half the render passes, and still looks the same apart from detail density (`npm run verify:screens` with `QUALITY=low`). There are no LODs or impostors yet. Mobile has not been tested.
 - **Rights.** All CC BY models are uploader-asserted and unverified (see the `rightsReview` fields). The Smithsonian original record could not be fetched during research. A rights review is required before publishing. Attribution is shown in the app's credits panel.
 - **Scientific review.** None has happened. The reconstruction and scene notes are editorial drafts. Model proportions were not checked against specimens. Plants are modern stand-ins (jacaranda, for example, is a modern tree, used only for its broadleaf form). The impact scene's streak density, surge timing and sky colour are illustrative.
-- **Motion.** The *Triceratops* leg gait is procedural and generic (no trackway-specific footfall data). The *T. rex* still uses the source walk clip. There is no foot IK on slopes for *T. rex*, and no turn-in-place animation, so animals only turn while moving.
+- **Motion.** Both leg gaits are procedural and generic, with no trackway-specific footfall data. The swing feet follow a simple arc and the toes do not flex. The hip and shoulder motion still comes from the source clips and is not phase-locked to the footfalls.
+- **Sound** was verified numerically, not listened to, and is a sketch rather than a field recording. **Impostors** are single-view billboards, so they look identical from every angle, which is acceptable only at a distance.
 - **Fossil scan scale.** The scan is shown at the scale its source file provides; the units are assumed to be metres.
-- **Not built:** CDN or object-storage hosting, accounts, a continuous timeline (scenes are discrete points in time), small surviving animals (birds, mammals, crocodilians, turtles) in the post-impact scene, and audio (no licensed audio was sourced).
+- **Not built:** CDN or object-storage hosting, accounts, a continuous timeline (scenes are discrete points in time, joined by fades), surviving mammals, crocodilians and turtles in the post-impact scene (only birds are shown), other Hell Creek dinosaurs (licensed models needed), and recorded audio.
 - **Source data is not committed.** `.cache/` holds the downloaded sources and is git-ignored. The built assets in `public/assets` are about 42 MB of binaries; consider Git LFS or object storage before the catalogue grows.

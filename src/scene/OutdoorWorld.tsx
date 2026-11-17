@@ -8,8 +8,10 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { OutdoorScene } from '../data/scenes';
 import { SPECIES } from '../data/species';
 import { leaders, useApp } from '../state';
-import { terrainHeight } from '../world/terrain';
+import { FOREST_CENTRE, terrainHeight } from '../world/terrain';
+import { Soundscape } from '../audio/Soundscape';
 import { Grade } from '../three/Grade';
+import { Birds } from './Birds';
 import { Dinosaur } from './Dinosaur';
 import { ImpactSky } from './ImpactSky';
 import { Terrain } from './Terrain';
@@ -22,6 +24,8 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
   const camera = useThree((s) => s.camera);
   const focus = useApp((s) => s.focus);
   const follow = useApp((s) => s.follow);
+  const tour = useApp((s) => s.tour);
+  const setTour = useApp((s) => s.setTour);
   const desired = useMemo(() => new Vector3(), []);
   const delta = useMemo(() => new Vector3(), []);
 
@@ -84,6 +88,9 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
       maxDistance={span * 9}
       maxPolarAngle={Math.PI * 0.495}
       enablePan={!follow || !hasAnimals}
+      autoRotate={tour}
+      autoRotateSpeed={0.35}
+      onStart={() => tour && setTour(false)}
     />
   );
 }
@@ -140,6 +147,7 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
   const low = useApp((s) => s.quality === 'low');
   const seenLeader = new Set<string>();
   const rotation = useMemo(() => new Euler(0, scene.skyRotation ?? 0, 0), [scene]);
+  const birdCentre = useMemo<[number, number]>(() => (scene.habitat === 'forest' ? FOREST_CENTRE : [0, 0]), [scene]);
   const grade = scene.grade && <Grade tint={scene.grade.tint} saturation={scene.grade.saturation} />;
   return (
     <>
@@ -175,6 +183,8 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
       })}
       {scene.particles === 'spores' && scene.animals.length > 0 && <FocusSparkles focus={focus} />}
       {scene.impact && <ImpactSky />}
+      <Soundscape scene={scene} />
+      {scene.birds && <Birds count={scene.birds.count} height={scene.birds.height} centre={birdCentre} />}
       <CameraRig scene={scene} />
       {low ? (
         <EffectComposer key="low" multisampling={0}>

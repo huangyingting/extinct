@@ -6,6 +6,7 @@ import { ToneMappingMode } from 'postprocessing';
 import type { Mesh } from 'three';
 import assets from '../data/generated/assets.json';
 import type { FossilScene } from '../data/scenes';
+import { useApp } from '../state';
 
 const mount = assets.models['fossil-mount'];
 const [width, length, height] = mount.size;
@@ -26,6 +27,8 @@ function Mount() {
 }
 
 export function FossilHall({ scene }: { scene: FossilScene }) {
+  const tour = useApp((s) => s.tour);
+  const setTour = useApp((s) => s.setTour);
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
   useEffect(() => {
@@ -51,7 +54,17 @@ export function FossilHall({ scene }: { scene: FossilScene }) {
         <planeGeometry args={[80, 80]} />
         <MeshReflectorMaterial resolution={1024} blur={[400, 120]} mixBlur={1} mixStrength={1.2} mirror={0.5} roughness={0.9} color="#121314" metalness={0.2} depthScale={0} />
       </mesh>
-      <OrbitControls makeDefault target={[0, height * 0.55, 0]} enableDamping minDistance={4} maxDistance={30} maxPolarAngle={Math.PI * 0.49} />
+      <OrbitControls
+        makeDefault
+        target={[0, height * 0.55, 0]}
+        enableDamping
+        minDistance={4}
+        maxDistance={30}
+        maxPolarAngle={Math.PI * 0.49}
+        autoRotate={tour}
+        autoRotateSpeed={0.5}
+        onStart={() => tour && setTour(false)}
+      />
       <EffectComposer multisampling={4}>
         <N8AO aoRadius={1.2} distanceFalloff={0.8} intensity={2.5} halfRes />
         <Bloom mipmapBlur luminanceThreshold={1.2} intensity={0.3} />

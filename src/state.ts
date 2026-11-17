@@ -16,6 +16,12 @@ interface AppState {
   panel: 'species' | 'scene' | 'credits' | null;
   /** 'low' halves ground cover and drops the far forest, water reflection and AO for weak GPUs. */
   quality: Quality;
+  /** Procedural ambience; off until the user turns it on (browsers need a gesture to start audio). */
+  sound: boolean;
+  setSound: (sound: boolean) => void;
+  /** Guided tour: slow orbit, focus changes and scene advance until the user takes the camera. */
+  tour: boolean;
+  setTour: (tour: boolean) => void;
   setQuality: (quality: Quality) => void;
   setScene: (scene: SceneId, focus?: SpeciesId) => void;
   setFocus: (focus: SpeciesId) => void;
@@ -40,6 +46,10 @@ export const useApp = create<AppState>((set) => ({
   panel: startConfig.kind !== 'outdoor' ? null : startConfig.animals.length > 0 ? 'species' : 'scene',
   quality: params.get('quality') === 'low' ? 'low' : 'high',
   setQuality: (quality) => set({ quality }),
+  sound: false,
+  setSound: (sound) => set({ sound }),
+  tour: false,
+  setTour: (tour) => set(tour ? { tour, follow: true, behaviour: 'auto' } : { tour }),
   setScene: (scene, focus) =>
     set((s) => ({
       scene,

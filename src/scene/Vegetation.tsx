@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { DoubleSide, type MeshStandardMaterial, type Object3D } from 'three';
+import { Color, DoubleSide, type MeshStandardMaterial, type Object3D } from 'three';
 import assets from '../data/generated/assets.json';
 import type { Habitat, OutdoorScene } from '../data/scenes';
 import { fernClump } from '../three/fernClump';
+import { buildImpostors } from '../three/impostor';
 import { buildInstances, cullChunks, windUniforms, type InstanceOptions } from '../three/instancing';
 import { useApp } from '../state';
 import { distanceToLoop, fbm, FOREST_CENTRE, riverDistance, scatter, type Placement } from '../world/terrain';
@@ -49,6 +50,8 @@ interface Layer {
   options: InstanceOptions;
   /** Build the instanced object from the loaded model instead of using it directly. */
   make?: (scene: Object3D) => Object3D;
+  /** Draw as camera-facing billboards rendered from the model (distant trees only). */
+  impostor?: boolean;
 }
 
 /**
@@ -74,8 +77,8 @@ function layersFor(habitat: Habitat, paths: [number, number][][], low: boolean):
   const dead = habitat === 'aftermath';
   const thin = <T,>(list: T[], keep: number) => (low ? list.filter((_, i) => i % keep === 0) : list);
   const layers: Layer[] = [];
-  const add = (key: string, url: string, placements: Placement[], options: InstanceOptions, make?: Layer['make']) =>
-    layers.push({ key, url, placements, options, make });
+  const add = (key: string, url: string, placements: Placement[], options: InstanceOptions, make?: Layer['make'], impostor = false) =>
+    layers.push({ key, url, placements, options, make, impostor });
 
   // Trees. Near trees cast shadows; distant ones use a lighter broadleaf model.
   const treeAvoid = (x: number, z: number) => nearPath(x, z, 11);
@@ -87,8 +90,10 @@ function layersFor(habitat: Habitat, paths: [number, number][][], low: boolean):
       seed: 52, count: 100, radius: 170, centre, scale: [0.6, 1.0], density: forest, avoid: treeAvoid, minRiverDistance: 30,
     });
     const near = (p: Placement) => Math.hypot(p.x - centre[0], p.z - centre[1]) < 50;
+    const mid = (p: Placement) => !near(p) && Math.hypot(p.x - centre[0], p.z - centre[1]) < 100;
     add('broadleaf', m.jacaranda_tree.url, thin(broad.filter(near), 2), TREE);
-    add('broadleaf-far', m.jacaranda_tree_far.url, broad.filter((p) => !near(p)), FAR_TREE);
+    add('broadleaf-far', m.jacaranda_tree_far.url, broad.filter(mid), FAR_TREE);
+    add('broadleaf-forest-edge', m.jacaranda_tree_far.url, broad.filter((p) => !near(p) && !mid(p)), FAR_TREE, undefined, true);
   } else {
     add('cypress', m['bald-cypress'].url, scatter({
       seed: 11, count: 120, radius: 230, scale: [0.55, 1.05], density: grove, avoid: treeAvoid, minRiverDistance: 17,
@@ -104,17 +109,17 @@ function layersFor(habitat: Habitat, paths: [number, number][][], low: boolean):
       add('broadleaf-far', m.jacaranda_tree_far.url, broad.filter((p) => !near(p)), FAR_TREE);
     }
   }
-  if (!low) {
-    const farCypress = scatter({
-      seed: 12, count: 170, radius: 640, scale: [0.6, 1.15],
-      density: (x, z) => (Math.hypot(x, z) < 230 ? 0 : clamp01(0.3 + grove(x, z))),
-    });
-    add('cypress-far', m['bald-cypress'].url, farCypress, dead ? { ...DEAD_TREE, castShadow: false, include: cypress(true) } : { ...FAR_TREE, include: cypress(false) });
-    add('broadleaf-horizon', m.jacaranda_tree_far.url, scatter({
-      seed: 14, count: 70, radius: 600, scale: [0.6, 1.1],
-      density: (x, z) => (Math.hypot(x, z) < 220 ? 0 : broadleafGrove(x, z)),
-    }), dead ? { ...DEAD_TREE, castShadow: false, include: broadleaf(true) } : FAR_TREE);
-  }
+  // Horizon trees are billboard impostors (two triangles each), so both quality tiers keep them,
+  // and there can be more of them.
+  const farCypress = scatter({
+    seed: 12, count: 260, radius: 680, scale: [0.6, 1.15],
+    density: (x, z) => (Math.hypot(x, z) < 230 ? 0 : clamp01(0.3 + grove(x, z))),
+  });
+  add('cypress-far', m['bald-cypress'].url, farCypress, dead ? { ...DEAD_TREE, include: cypress(true) } : { ...FAR_TREE, include: cypress(false) }, undefined, true);
+  add('broadleaf-horizon', m.jacaranda_tree_far.url, scatter({
+    seed: 14, count: 160, radius: 650, scale: [0.6, 1.1],
+    density: (x, z) => (Math.hypot(x, z) < 220 ? 0 : broadleafGrove(x, z)),
+  }), dead ? { ...DEAD_TREE, include: broadleaf(true) } : FAR_TREE, undefined, true);
 
   // Ground layer. After the impact ferns take over the open ground (the "fern spike").
   // Full fern models add close-up detail over the cheap carpet below.
@@ -167,28 +172,48 @@ function layersFor(habitat: Habitat, paths: [number, number][][], low: boolean):
   return layers;
 }
 
-function Instanced({ name, url, placements, options, make }: Omit<Layer, 'key'> & { name: string }) {
+function Instanced({ name, url, placements, options, make, impostor, light }: Omit<Layer, 'key'> & { name: string; light: Color }) {
   const { scene } = useGLTF(url);
   const camera = useThree((s) => s.camera);
-  const group = useMemo(() => buildInstances(make ? make(scene) : scene, placements, options), [scene, placements, options, make]);
+  const gl = useThree((s) => s.gl);
+  const group = useMemo(
+    () =>
+      impostor
+        ? buildImpostors(gl, scene, placements, { include: options.include, light, tint: options.tint })
+        : buildInstances(make ? make(scene) : scene, placements, options),
+    [scene, placements, options, make, impostor, gl, light],
+  );
   group.name = name;
   useFrame(() => {
-    if (options.cullDistance) cullChunks(group, camera.position, options.cullDistance);
+    if (options.cullDistance) cullChunks(group as never, camera.position, options.cullDistance);
   });
-  useEffect(() => () => group.traverse((o) => (o as { dispose?: () => void }).dispose?.()), [group]);
+  useEffect(
+    () => () =>
+      group.traverse((o) => {
+        (o as { dispose?: () => void }).dispose?.();
+        (o.userData.dispose as (() => void) | undefined)?.();
+      }),
+    [group],
+  );
   return <primitive object={group} />;
 }
 
 export function Vegetation({ scene }: { scene: OutdoorScene }) {
   const low = useApp((s) => s.quality === 'low');
   const layers = useMemo(() => layersFor(scene.habitat, scene.animals.map((a) => a.path), low), [scene, low]);
+  // Light for the impostors' baked texture: sun colour and strength plus sky fill, roughly matching
+  // how the meshes are lit at that distance (fog does most of the work beyond 200 m).
+  const light = useMemo(
+    () => new Color(scene.sunColor).multiplyScalar(scene.sunIntensity * 0.06).addScalar(scene.environmentIntensity * 0.6),
+    [scene],
+  );
   useFrame((_, delta) => {
     windUniforms.uTime.value += delta;
   });
   return (
     <>
       {layers.map((layer) => (
-        <Instanced key={layer.key} name={layer.key} url={layer.url} placements={layer.placements} options={layer.options} make={layer.make} />
+        <Instanced key={layer.key} name={layer.key} url={layer.url} placements={layer.placements} options={layer.options} make={layer.make} impostor={layer.impostor} light={light} />
       ))}
     </>
   );

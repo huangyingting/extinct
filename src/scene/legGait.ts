@@ -2,7 +2,7 @@ import { MathUtils, Object3D, Quaternion, Vector3 } from 'three';
 import { terrainHeight } from '../world/terrain';
 
 /**
- * Procedural quadruped walk with planted feet.
+ * Procedural walk with planted feet, for any number of legs.
  *
  * The source Triceratops walk clip barely plants its feet (each foot is in ground contact for
  * only ~10-15% of the cycle, and the front feet sweep back ~2x faster than the hind feet), so at
@@ -76,7 +76,7 @@ function setWorldQuaternion(bone: Object3D, world: Quaternion) {
   bone.quaternion.copy(_p.invert().multiply(world));
 }
 
-export class QuadrupedGait {
+export class LegGait {
   private legs: Leg[] = [];
   private cycle = 0;
   private readonly spec: GaitSpec;
@@ -110,6 +110,11 @@ export class QuadrupedGait {
     return this.legs.length === this.spec.legs.length;
   }
 
+  /** Step frequency at a given speed (cycles per second); the walk clip's rhythm is synced to it. */
+  frequency(speed: number) {
+    return this.stepLength(speed).f;
+  }
+
   /** Where a foot would land: under its rest position, advanced by half a stance step. */
   private landing(leg: Leg, body: Object3D, step: number, target: Vector3) {
     target.copy(leg.restContact);
@@ -141,25 +146,27 @@ export class QuadrupedGait {
    * Advance the gait and pose the legs. `weight` blends the IK pose over the clip pose (0 = clip).
    * Must run after the animation mixer has posed the skeleton for this frame.
    */
-  update(body: Object3D, speed: number, dt: number, weight: number) {
+  update(body: Object3D, speed: number, dt: number, weight: number, turning = false) {
     if (!this.ready) return;
     const { duty } = this.spec;
-    const { f, step } = this.stepLength(speed);
+    // Turning on the spot steps at a slow-walk rhythm with short steps.
+    const stepping = speed > 0.06 || turning;
+    const { f, step } = this.stepLength(turning ? Math.max(speed, this.spec.cruise * 0.35) : speed);
     const anySwing = this.legs.some((l) => l.swinging);
-    // Keep stepping while moving, and let a lifted foot finish its step when stopping.
-    if (speed > 0.06 || anySwing) this.cycle = (this.cycle + f * dt) % 1;
+    // Keep stepping while moving or turning, and let a lifted foot finish its step when stopping.
+    if (stepping || anySwing) this.cycle = (this.cycle + f * dt) % 1;
 
     body.updateMatrixWorld(true);
     for (const leg of this.legs) {
       const phase = (this.cycle + leg.spec.phase) % 1;
-      const inSwing = phase >= duty && (speed > 0.06 || leg.swinging);
+      const inSwing = phase >= duty && (stepping || leg.swinging);
       if (inSwing) {
         if (!leg.swinging) {
           leg.swinging = true;
           leg.swingFrom.copy(leg.planted);
         }
         // Re-aim during the swing so the foot lands under the body even while turning.
-        this.landing(leg, body, step, leg.swingTo);
+        this.landing(leg, body, turning && speed < 0.3 ? 0 : step, leg.swingTo);
         const s = MathUtils.clamp((phase - duty) / (1 - duty), 0, 1);
         const e = s * s * (3 - 2 * s);
         leg.foot.lerpVectors(leg.swingFrom, leg.swingTo, e);

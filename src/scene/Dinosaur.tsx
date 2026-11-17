@@ -18,7 +18,7 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { SPECIES, type SpeciesId } from '../data/species';
 import { agents, leaders, useApp, type Agent } from '../state';
 import { mulberry32, terrainHeight } from '../world/terrain';
-import { QuadrupedGait, type GaitSpec } from './quadrupedGait';
+import { LegGait, type GaitSpec } from './legGait';
 
 // ----------------------------------------------------------------------------------------------
 // Per-species locomotion and rig settings
@@ -73,6 +73,8 @@ interface RigSpec {
   gait?: GaitSpec;
   /** Jaw bone and a clip whose first frame has the mouth closed; the walk clips leave it hanging open. */
   mouth?: { bone: string; clip: string; /** Extra closing beyond that frame, degrees. */ close?: number };
+  /** A held frame of a clip used as a head-up "watch" pose that alternates with the rest clip during pauses. */
+  watch?: { clip: string; time: number };
 }
 
 const RIG: Record<SpeciesId, RigSpec> = {
@@ -87,6 +89,19 @@ const RIG: Record<SpeciesId, RigSpec> = {
     lookPitch: 0.3,
     tailSway: 0.05,
     mouth: { bone: 'T-Rex_Jew_022', clip: 'Idle' },
+    // The source walk is usable on flat ground, but its feet float or sink on slopes and it cannot
+    // turn on the spot, so the legs are driven by the same planted-foot system as Triceratops.
+    // About 0.4 steps per second per leg at cruise: a ~3.7 m stride, close to the ~3.9 m implied by
+    // the preferred-speed estimate (1.28 m/s at 0.33 Hz).
+    gait: {
+      duty: 0.6,
+      frequency: 0.42,
+      cruise: 1.5,
+      legs: [
+        { upper: 'T-Rex_LLeg1_035', lower: 'T-Rex_LLeg2_036', end: 'T-Rex_LLegAnkle_037', contact: 'T-Rex_LLegDigit11_038', phase: 0, lift: 0.32 },
+        { upper: 'T-Rex_RLeg1_029', lower: 'T-Rex_RLeg2_030', end: 'T-Rex_RLegAnkle_031', contact: 'T-Rex_RLegDigit11_032', phase: 0.5, lift: 0.32 },
+      ],
+    },
   },
   triceratops: {
     spine: [],
@@ -101,11 +116,15 @@ const RIG: Record<SpeciesId, RigSpec> = {
     lookPitch: 0.22,
     tailSway: 0.06,
     mouth: { bone: 'Bone.004_Armature', clip: 'Alert', close: 10 },
+    // Head raised and slightly turned (0.7 s into the alert clip): looking around between bites.
+    watch: { clip: 'Alert', time: 0.7 },
     // The source walk barely plants its feet and its front feet over-stride the hind feet ~2x,
     // so the legs are driven procedurally while walking: a lateral-sequence walk (LH, LF, RH, RF).
     gait: {
       duty: 0.65,
-      frequency: 0.62,
+      // 0.62 left the front feet ~15 cm out of reach at the end of stance (they dragged); shorter
+      // steps keep every foot within reach.
+      frequency: 0.72,
       cruise: 1.05,
       legs: [
         { upper: 'Bone.019_Armature', lower: 'Bone.023_Armature', end: 'Bone.027_Armature', contact: 'Bone.031_Armature', phase: 0, lift: 0.16 },
@@ -222,7 +241,7 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
       tail: rigSpec.tail.map(find).filter((b): b is Object3D => !!b),
       chest: rigSpec.chest ? find(rigSpec.chest) : null,
       head: find(rigSpec.head),
-      gait: rigSpec.gait ? new QuadrupedGait(model, rigSpec.gait, find) : null,
+      gait: rigSpec.gait ? new LegGait(model, rigSpec.gait, find) : null,
       mouth: (() => {
         const mouth = rigSpec.mouth;
         if (!mouth) return null;
@@ -275,6 +294,10 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     lookAgent: '' as string,
     nextLook: 0,
     alarmCooldown: 0,
+    /** Watch pose (head up) blend during pauses, and when to toggle it next. */
+    watching: false,
+    watchWeight: 0,
+    nextWatch: 0,
     tail: [] as { yaw: Spring; pitch: Spring }[],
     clock: 0,
   });
@@ -288,7 +311,7 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
 
   // drei creates actions lazily, bound to `root.current` at the time of access, so they are
   // resolved after mount (in the start effect below), never during render.
-  const clips = useRef<{ walk?: AnimationAction; rest?: AnimationAction; action?: AnimationAction }>({});
+  const clips = useRef<{ walk?: AnimationAction; rest?: AnimationAction; action?: AnimationAction; watch?: AnimationAction }>({});
 
   const beginMode = (mode: Mode) => {
     const s = state.current;
@@ -310,7 +333,21 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
   // Start: place on the path, start the looping clips, and desynchronise individuals.
   useEffect(() => {
     clips.current = { walk: actions.Walk ?? undefined, rest: actions[info.restClip] ?? undefined, action: actions[info.actionClip] ?? undefined };
-    if (DEBUG) ((window as unknown as { __dinos: unknown[] }).__dinos ??= []).push({ id, mixer, clips: clips.current, state: state.current });
+    if (rigSpec.watch && root.current) {
+      // A renamed copy gets its own action, so the one-shot clip stays free.
+      const source = gltf.animations.find((c) => c.name === rigSpec.watch!.clip);
+      if (source) {
+        const copy = source.clone();
+        copy.name = `${source.name}-watch`;
+        const watch = mixer.clipAction(copy, root.current);
+        watch.play();
+        watch.paused = true;
+        watch.time = rigSpec.watch.time;
+        watch.setEffectiveWeight(0);
+        clips.current.watch = watch;
+      }
+    }
+    if (DEBUG) ((window as unknown as { __dinos: unknown[] }).__dinos ??= []).push({ id, mixer, clips: clips.current, state: state.current, bones });
     const { walk, rest } = clips.current;
     const s = state.current;
     s.index = Math.floor(start * track.length) % track.length;
@@ -443,7 +480,7 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     const dt = Math.min(rawDelta, 0.1);
     const s = state.current;
     const group = root.current;
-    const { walk, rest, action } = clips.current;
+    const { walk, rest, action, watch } = clips.current;
     if (!group || !walk) return;
     s.clock += dt;
     s.timer += dt;
@@ -489,7 +526,9 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     const desired = Math.atan2(aim.x - s.position.x, aim.z - s.position.z);
     const error = wrapAngle(desired - s.heading);
     // Slow down for bends, and for an animal close ahead on the same track.
-    const bend = MathUtils.clamp(1 - Math.abs(error) * 0.9, 0.45, 1);
+    // With procedural legs a sharp heading change is made mostly on the spot, stepping round.
+    const sharp = !!bones.gait && Math.abs(error) > 1.0;
+    const bend = sharp ? 0.12 : MathUtils.clamp(1 - Math.abs(error) * 0.9, 0.45, 1);
     let spacing = 1;
     for (const [key, agent] of agents) {
       if (key === id) continue;
@@ -501,7 +540,8 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     const target = gait.cruise * g * bend * spacing;
     s.speed = damp(s.speed, target, 2.5, dt);
     // Turning needs forward motion (the walk has no turn-on-the-spot); limit the rate by the turn radius.
-    const maxRate = s.speed / gait.minTurnRadius + 0.015;
+    const turningOnSpot = sharp && travelling;
+    const maxRate = s.speed / gait.minTurnRadius + 0.015 + (turningOnSpot ? 0.28 : 0);
     const turn = MathUtils.clamp(error * 1.6, -maxRate, maxRate);
     s.heading = wrapAngle(s.heading + turn * dt);
     s.yawRate = damp(s.yawRate, turn, 4, dt);
@@ -519,9 +559,22 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     const walkWeight = smooth((s.speed / gait.cruise - 0.05) / 0.45);
     if (walk) {
       walk.setEffectiveWeight((1 - actionWeight) * walkWeight);
-      walk.timeScale = MathUtils.clamp(s.speed / (info.model.walkSpeed * Math.max(walkWeight, 0.35)), 0.05, 2);
+      // With procedural legs the clip only supplies body, arm and tail rhythm: sync it to the steps.
+      walk.timeScale = bones.gait
+        ? bones.gait.frequency(Math.max(s.speed, 0.1)) * walk.getClip().duration
+        : MathUtils.clamp(s.speed / (info.model.walkSpeed * Math.max(walkWeight, 0.35)), 0.05, 2);
     }
-    if (rest) rest.setEffectiveWeight((1 - actionWeight) * (1 - walkWeight));
+    // During pauses some species alternate the rest clip with a head-up watch pose.
+    if (watch) {
+      if (s.mode !== 'pause') s.watching = false;
+      else if (s.clock > s.nextWatch) {
+        s.watching = !s.watching;
+        s.nextWatch = s.clock + (s.watching ? range([3, 7]) : range([5, 11]));
+      }
+      s.watchWeight = damp(s.watchWeight, s.watching ? 1 : 0, 1.6, dt);
+      watch.setEffectiveWeight((1 - actionWeight) * (1 - walkWeight) * s.watchWeight);
+    }
+    if (rest) rest.setEffectiveWeight((1 - actionWeight) * (1 - walkWeight) * (1 - (watch ? s.watchWeight : 0)));
 
     // ---------------------------------------------------------------- procedural layers (after the mixer)
     if (NO_PROCEDURAL) return;
@@ -535,8 +588,12 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
       rotateBone(bones.mouth.bone, RIGHT, -bones.mouth.close * k, body);
     }
 
-    // Legs: procedural planted-foot gait over the clip while walking (see quadrupedGait.ts).
-    bones.gait?.update(group, s.speed, dt, walkWeight * (1 - actionWeight));
+    // Legs: procedural planted-foot gait over the clip while walking (see legGait.ts).
+    // Legs stay on the planted-foot system whenever the body is moving, even under a one-shot clip,
+    // or the feet would slide while the animal decelerates.
+    const moving = smooth(s.speed / (gait.cruise * 0.25));
+    const legWeight = Math.max(walkWeight * (1 - actionWeight), moving, turningOnSpot ? 1 : 0);
+    bones.gait?.update(group, s.speed, dt, legWeight, turningOnSpot);
 
     // Spine bends into the turn.
     const bendAngle = MathUtils.clamp(s.yawRate * 1.1, -0.22, 0.22);
@@ -548,7 +605,8 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     // Head look-at: the target in the body frame becomes yaw/pitch, sprung and split over the neck.
     let targetYaw = 0;
     let targetPitch = 0;
-    let weight = s.mode === 'action' ? 0.35 : s.mode === 'pause' ? (species === 'triceratops' ? 0.35 : 1) : 0.7;
+    const grazing = species === 'triceratops' && s.mode === 'pause' && s.watchWeight < 0.5;
+    let weight = s.mode === 'action' ? 0.35 : s.mode === 'pause' ? (grazing ? 0.35 : 1) : 0.7;
     if (bones.head) {
       bones.head.getWorldPosition(headPos);
       let have = true;
@@ -573,7 +631,7 @@ export function Dinosaur({ id, species, path, start, phase, lateral = 0, leader 
     // While walking, anticipate the turn with the head.
     targetYaw = MathUtils.clamp(targetYaw + s.yawRate * 0.9, -rigSpec.lookYaw, rigSpec.lookYaw);
     targetPitch = MathUtils.clamp(targetPitch, -rigSpec.lookPitch, rigSpec.lookPitch * 0.8);
-    if (species === 'triceratops' && s.mode === 'pause') targetPitch = 0; // grazing keeps the head low
+    if (grazing) targetPitch = 0; // grazing keeps the head low
     s.lookWeight = damp(s.lookWeight, weight, 2, dt);
     springTo(s.lookYaw, targetYaw, 18, 8.5, dt);
     springTo(s.lookPitch, targetPitch, 18, 8.5, dt);

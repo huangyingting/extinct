@@ -1,6 +1,7 @@
 import assets from './generated/assets.json';
 import type { SpeciesId } from './species';
 import { loop, riverLoop, riverX } from '../world/terrain';
+import type { AmbienceProfile } from '../audio/ambience';
 
 export type SceneId = 'morning' | 'forest' | 'dusk' | 'impact' | 'aftermath' | 'fossil';
 
@@ -77,6 +78,10 @@ export interface OutdoorScene extends SceneBase {
   particles: 'spores' | 'spherules' | 'none';
   /** Re-entering ejecta streaks and a seiche surge in the river (impact scene only). */
   impact?: boolean;
+  /** Procedural soundscape levels (see audio/ambience.ts). */
+  ambience: AmbienceProfile;
+  /** Circling birds: how many, and their height range in metres. */
+  birds?: { count: number; height: [number, number] };
   /**
    * Initial camera offset (world metres) from the focus animal, or from `target` when the scene has
    * no animals. Eye level keeps the scale legible.
@@ -125,7 +130,7 @@ const hellCreekSetting: SceneNote[] = [
   },
   {
     basis: 'staging',
-    text: 'The plants are modern stand-ins: bald cypress for taxodiaceous conifers, jacaranda and other broadleaves for the angiosperm trees, and modern ferns. Species, leaf shapes and colours differ from the real flora.',
+    text: 'The plants are modern stand-ins: bald cypress for taxodiaceous conifers, jacaranda and other broadleaves for the angiosperm trees, and modern ferns. Species, leaf shapes and colours differ from the real flora. The birds are generic silhouettes: Hell Creek birds, both enantiornithines and early relatives of modern birds, are known mostly from fragments.',
   },
 ];
 
@@ -135,6 +140,8 @@ export const SCENES: Record<SceneId, SceneConfig> = {
     kind: 'outdoor',
     habitat: 'floodplain',
     title: 'Floodplain, morning',
+    birds: { count: 10, height: [22, 55] },
+    ambience: { wind: 0.5, river: 0.6, insects: 0.5, rumble: 0 },
     short: 'Morning floodplain',
     subtitle: 'Triceratops feeding on the river floodplain',
     era: 'Late Maastrichtian · c. 66.1 Ma',
@@ -169,6 +176,8 @@ export const SCENES: Record<SceneId, SceneConfig> = {
     kind: 'outdoor',
     habitat: 'forest',
     title: 'Floodplain forest, midday',
+    birds: { count: 6, height: [32, 60] },
+    ambience: { wind: 0.35, river: 0.15, insects: 0.8, rumble: 0 },
     short: 'Forest, midday',
     subtitle: 'Tyrannosaurus moving through a broadleaf and conifer stand',
     era: 'Late Maastrichtian · c. 66.1 Ma',
@@ -205,6 +214,8 @@ export const SCENES: Record<SceneId, SceneConfig> = {
     kind: 'outdoor',
     habitat: 'floodplain',
     title: 'River margin, dusk',
+    birds: { count: 8, height: [18, 45] },
+    ambience: { wind: 0.4, river: 0.7, insects: 1, rumble: 0 },
     short: 'River at dusk',
     subtitle: 'Tyrannosaurus patrolling the channel bank',
     era: 'Late Maastrichtian · c. 66.1 Ma',
@@ -238,6 +249,7 @@ export const SCENES: Record<SceneId, SceneConfig> = {
     kind: 'outdoor',
     habitat: 'floodplain',
     title: 'The impact, minutes after',
+    ambience: { wind: 0.6, river: 0.7, insects: 0, rumble: 1 },
     short: 'Impact',
     subtitle: 'Ejecta from Chicxulub, about 3,000 km away, re-entering over Hell Creek',
     era: 'K–Pg boundary · 66.0 Ma',
@@ -293,6 +305,8 @@ export const SCENES: Record<SceneId, SceneConfig> = {
     kind: 'outdoor',
     habitat: 'aftermath',
     title: 'After the impact',
+    birds: { count: 4, height: [20, 40] },
+    ambience: { wind: 0.9, river: 0.5, insects: 0.08, rumble: 0 },
     short: 'Fern spike',
     subtitle: 'A dim, fern-covered floodplain without non-avian dinosaurs',
     era: 'Earliest Paleocene · just after 66.0 Ma',
@@ -330,7 +344,7 @@ export const SCENES: Record<SceneId, SceneConfig> = {
       },
       {
         basis: 'staging',
-        text: 'The dead trunks, the pale clay layer on the ground and the overcast sky are illustrative. A real fern spike is identified from microscopic spores in the rock, not from a scene like this.',
+        text: 'The dead trunks, the pale clay layer on the ground and the overcast sky are illustrative. The few circling birds stand for the dinosaur lineage that survived; they are generic silhouettes. A real fern spike is identified from microscopic spores in the rock, not from a scene like this.',
       },
     ],
     references: [references.ferns, references.wilfJohnson, references.darkness, references.fastovsky],

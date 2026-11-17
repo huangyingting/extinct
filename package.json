@@ -14,7 +14,8 @@
     "data:pbdb": "node pipeline/fetch-pbdb.mjs",
     "verify:screens": "node pipeline/screenshot.mjs",
     "measure:fps": "node pipeline/measure-fps.mjs",
-    "assets:build:polyhaven": "node pipeline/build-polyhaven.mjs"
+    "assets:build:polyhaven": "node pipeline/build-polyhaven.mjs",
+    "verify:motion": "node pipeline/verify-motion.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
