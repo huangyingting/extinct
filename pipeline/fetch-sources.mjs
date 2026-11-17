@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const cache = join(root, '.cache', 'sources');
 const sources = JSON.parse(await readFile(join(root, 'pipeline', 'sources.json'), 'utf8'));
+// Optional ids on the command line restrict the download, e.g. `npm run assets:fetch -- jacaranda_tree`.
+const only = new Set(process.argv.slice(2));
+const wanted = (item) => only.size === 0 || only.has(item.id);
 
 async function exists(path) {
   try {
@@ -39,7 +42,7 @@ async function download(url, dest, check) {
   console.log(`fetched ${url}`);
 }
 
-for (const item of sources.objaverse.items) {
+for (const item of sources.objaverse.items.filter(wanted)) {
   await download(
     sources.objaverse.baseUrl + item.path,
     join(cache, 'objaverse', `${item.id}.glb`),
@@ -47,7 +50,7 @@ for (const item of sources.objaverse.items) {
   );
 }
 
-for (const item of sources.polyhaven.items) {
+for (const item of sources.polyhaven.items.filter(wanted)) {
   const response = await fetch(`https://api.polyhaven.com/files/${item.id}`);
   if (!response.ok) throw new Error(`Poly Haven files lookup failed for ${item.id}`);
   const files = await response.json();

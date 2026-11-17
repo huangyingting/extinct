@@ -1,8 +1,9 @@
 import { useProgress } from '@react-three/drei';
-import { SCENE_ORDER, SCENES } from '../data/scenes';
+import { SCENES, TIMELINE } from '../data/scenes';
 import { SPECIES, type SpeciesId } from '../data/species';
 import { useApp, type Behaviour } from '../state';
 import { CreditsPanel } from './CreditsPanel';
+import { ScenePanel } from './ScenePanel';
 import { FpsMeter } from './FpsMeter';
 import { SpeciesPanel } from './SpeciesPanel';
 
@@ -28,34 +29,44 @@ export function Overlay() {
   const { setScene, setFocus, setFollow, setBehaviour, triggerAction, setPanel } = useApp();
   const config = SCENES[scene];
   const outdoor = config.kind === 'outdoor';
+  const animals = outdoor && config.animals.length > 0;
+  const present = new Set(outdoor ? config.animals.map((a) => a.species) : []);
 
   return (
     <div className="overlay">
       <header className="title">
-        <p className="eyebrow">Extinct · Hell Creek Formation · latest Cretaceous</p>
+        <p className="eyebrow">Extinct · Hell Creek Formation · {config.era}</p>
         <h1>{config.title}</h1>
         <p className="muted">{config.subtitle}</p>
-        <nav className="scenes" aria-label="Scenes">
-          {SCENE_ORDER.map((id) => (
-            <button
-              key={id}
-              className={id === scene ? 'active' : ''}
-              aria-pressed={id === scene}
-              onClick={() => {
-                const next = SCENES[id];
-                setScene(id, next.kind === 'outdoor' ? next.camera.focus : undefined);
-              }}
-            >
-              {SCENES[id].title}
-            </button>
+        <nav className="timeline" aria-label="Scenes in time order">
+          {TIMELINE.map((group) => (
+            <div className="timeline-group" key={group.label}>
+              <span className="timeline-label">{group.label}</span>
+              <div className="scenes">
+                {group.scenes.map((id) => (
+                  <button
+                    key={id}
+                    className={id === scene ? 'active' : ''}
+                    aria-pressed={id === scene}
+                    title={`${SCENES[id].title} · ${SCENES[id].era}`}
+                    onClick={() => {
+                      const next = SCENES[id];
+                      setScene(id, next.kind === 'outdoor' ? next.camera.focus : undefined);
+                    }}
+                  >
+                    {SCENES[id].short}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
       </header>
 
-      {outdoor && (
+      {animals && (
         <div className="controls" role="group" aria-label="Animal controls">
           <div className="segmented" aria-label="Focus species">
-            {(Object.keys(SPECIES) as SpeciesId[]).map((id) => (
+            {(Object.keys(SPECIES) as SpeciesId[]).filter((id) => present.has(id)).map((id) => (
               <button key={id} className={id === focus ? 'active' : ''} aria-pressed={id === focus} onClick={() => setFocus(id)}>
                 <i>{SPECIES[id].scientificName.split(' ')[0]}</i>
               </button>
@@ -86,15 +97,26 @@ export function Overlay() {
         </div>
       )}
 
+      {outdoor && !animals && (
+        <div className="controls fossil-note">
+          <p>
+            <strong>No dinosaurs here.</strong> Non-avian dinosaurs do not occur above the boundary clay. Open the scene
+            notes for what this landscape is based on.
+          </p>
+        </div>
+      )}
+
       <div className="corner">
-        {outdoor && panel !== 'species' && <button onClick={() => setPanel('species')}>Species info</button>}
-        <button onClick={() => setPanel(panel === 'credits' ? (outdoor ? 'species' : null) : 'credits')}>Sources &amp; credits</button>
+        {panel !== 'scene' && <button onClick={() => setPanel('scene')}>Scene notes</button>}
+        {animals && panel !== 'species' && <button onClick={() => setPanel('species')}>Species info</button>}
+        <button onClick={() => setPanel(panel === 'credits' ? null : 'credits')}>Sources &amp; credits</button>
       </div>
 
-      {panel === 'species' && outdoor && <SpeciesPanel />}
+      {panel === 'species' && animals && <SpeciesPanel />}
+      {panel === 'scene' && <ScenePanel />}
       {panel === 'credits' && <CreditsPanel />}
 
-      <p className="hint">Drag to orbit · scroll to zoom{follow && outdoor ? '' : ' · right-drag to pan'}</p>
+      <p className="hint">Drag to orbit · scroll to zoom{follow && animals ? '' : ' · right-drag to pan'}</p>
       <FpsMeter />
       <Loader />
     </div>

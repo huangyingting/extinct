@@ -43,14 +43,19 @@ button.active { background: rgba(240, 239, 236, 0.92); color: #141412; border-co
 button.primary { background: var(--accent); color: #1b1407; border-color: transparent; font-weight: 600; }
 button.icon { border: none; background: none; font-size: 22px; line-height: 1; padding: 0 4px; backdrop-filter: none; }
 
-.title { position: absolute; top: 22px; left: 26px; max-width: 520px; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55); pointer-events: none; }
+.title { position: absolute; top: 22px; left: 26px; max-width: 880px; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55); pointer-events: none; }
 .title nav { pointer-events: auto; }
 .eyebrow { margin: 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); }
 .title h1 { margin: 6px 0 2px; font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
 .title p { margin: 0; }
 .muted { color: var(--text-secondary); }
 .small { font-size: 12px; line-height: 1.5; }
-.scenes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.scenes { display: flex; gap: 6px; flex-wrap: wrap; }
+.timeline { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; align-items: flex-end; max-width: 860px; }
+.timeline-group { display: grid; gap: 5px; padding-left: 10px; border-left: 1px solid var(--line); }
+.timeline-group:first-child { padding-left: 0; border-left: none; }
+.timeline button { font-size: 12px; padding: 5px 11px; }
+.timeline-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); }
 
 .controls {
   position: absolute; left: 26px; bottom: 24px;
@@ -113,3 +118,12 @@ button.icon { border: none; background: none; font-size: 22px; line-height: 1; p
 
 .fps { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); padding: 6px 12px; border-radius: 10px; background: var(--surface-glass); border: 1px solid var(--line); font-size: 12px; font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }
 .fps-renderer { max-width: 420px; color: var(--text-secondary); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.claims { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.claims p { margin: 3px 0 0; line-height: 1.5; }
+.basis { display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-secondary); }
+.basis-evidence { border-color: rgba(120, 190, 140, 0.6); color: #9fd6ad; }
+.basis-inferred { border-color: rgba(120, 160, 220, 0.6); color: #a9c4ee; }
+.basis-debated { border-color: rgba(230, 170, 90, 0.7); color: var(--accent); }
+.references { margin: 0; padding-left: 16px; display: grid; gap: 4px; }
+.references a { color: var(--text-primary); }

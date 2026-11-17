@@ -19,9 +19,12 @@ const server = spawn(join(root, 'node_modules', '.bin', 'vite'), ['preview', '--
 await new Promise((resolve) => setTimeout(resolve, 2500));
 
 const settle = Number(process.env.SETTLE_MS ?? 25000);
+// CHROME_CHANNEL='' uses Playwright's bundled Chromium. ANGLE=gl-egl renders on a GPU in a headless
+// Linux VM; the default is SwiftShader software rendering.
+const angle = process.env.ANGLE ?? 'swiftshader';
 const browser = await chromium.launch({
-  channel: process.env.CHROME_CHANNEL ?? 'chrome',
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+  channel: (process.env.CHROME_CHANNEL ?? 'chrome') || undefined,
+  args: [`--use-angle=${angle}`, '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
 });
 const errors = [];
 try {
@@ -31,16 +34,10 @@ try {
   });
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
   // QUALITY=low captures the fallback tier that weak GPUs switch to.
-  const quality = process.env.QUALITY ? `?quality=${process.env.QUALITY}` : '';
-  await page.goto(`http://localhost:${port}/${quality}`);
-
-  const shots = [
-    { name: 'morning', button: null },
-    { name: 'dusk', button: 'River margin, dusk' },
-    { name: 'fossil', button: 'Fossil evidence' },
-  ];
-  for (const shot of shots) {
-    if (shot.button) await page.getByRole('button', { name: shot.button }).click({ timeout: 180000, force: true });
+  const quality = process.env.QUALITY ? `&quality=${process.env.QUALITY}` : '';
+  for (const name of ['morning', 'forest', 'dusk', 'impact', 'aftermath', 'fossil']) {
+    const shot = { name };
+    await page.goto(`http://localhost:${port}/?scene=${name}${quality}`);
     await page.waitForFunction(() => !document.querySelector('.loader'), null, { timeout: 180000 });
     await page.waitForTimeout(settle);
     await page.screenshot({ path: join(outDir, `${shot.name}${quality ? '-low' : ''}.png`), timeout: 300000 });

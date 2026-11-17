@@ -4,13 +4,13 @@ Research and planning for a **browser-based 3D experience about extinct plants a
 
 The intended product is an interactive experience, not primarily a text encyclopedia. Possible experiences discussed so far include inspecting reconstructed organisms, exploring prehistoric habitats, and navigating geological time. The exact experience and target devices remain open decisions.
 
-**Status:** research plus a minimal 3D prototype. Two reconstructed dinosaurs, *Tyrannosaurus rex* and *Triceratops horridus*, animate in a procedurally generated Hell Creek floodplain at morning and dusk. A third scene shows a Smithsonian fossil scan. PBDB fossil-record data and full asset provenance are shown in the app. See [prototype](docs/prototype.md) for what was built, how it was verified, and its limitations. Nothing has been deployed, frame rate on real hardware has not been measured, and no rights or scientific review has been done.
+**Status:** research plus a minimal 3D prototype. Two reconstructed dinosaurs, *Tyrannosaurus rex* and *Triceratops horridus*, walk through a procedurally generated Hell Creek landscape. Six scenes run in time order: floodplain at morning, forest at midday, river at dusk, the Chicxulub impact as seen from Hell Creek, the fern-covered aftermath without non-avian dinosaurs, and a Smithsonian fossil scan. Each scene lists the evidence it rests on, labelled as evidence, inference, debate or staging, with references. Motion uses a locomotion controller with procedural layers, and the *Triceratops* has a planted-foot leg gait. PBDB fossil-record data and full asset provenance are shown in the app. See [prototype](docs/prototype.md) for what was built, how it was verified, and its limitations. Nothing has been deployed, frame rate on consumer hardware has not been measured, and no rights or scientific review has been done.
 
 ## Quick start
 
 ```bash
 npm install
-npm run dev        # open http://localhost:5173
+npm run dev        # open http://localhost:5173 (add ?scene=impact etc. to open a scene directly)
 ```
 
 Asset and data regeneration (Blender, gltf-transform, PBDB) is described in [docs/prototype.md](docs/prototype.md#running-it).

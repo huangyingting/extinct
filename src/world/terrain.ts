@@ -188,3 +188,17 @@ export function distanceToLoop(points: [number, number][], x: number, z: number)
   }
   return best;
 }
+
+/** Centre of the closed forest stand used by the forest scene. */
+export const FOREST_CENTRE: [number, number] = [125, -100];
+
+/** Closed, slightly irregular elliptical loop of XZ points (an animal path away from the river). */
+export function loop(cx: number, cz: number, rx: number, rz: number, steps = 16, wobble = 3): [number, number][] {
+  const points: [number, number][] = [];
+  for (let i = 0; i < steps; i++) {
+    const a = (i / steps) * Math.PI * 2;
+    const r = 1 + (wobble / Math.max(rx, rz)) * Math.sin(a * 3 + 1.1);
+    points.push([cx + Math.cos(a) * rx * r, cz + Math.sin(a) * rz * r]);
+  }
+  return points;
+}

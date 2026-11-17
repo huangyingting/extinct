@@ -78,28 +78,6 @@
         0.43
       ]
     },
-    "rock_07": {
-      "url": "assets/models/rock_07.glb",
-      "bytes": 293364,
-      "sourceTriangles": 14844,
-      "triangles": 2226,
-      "size": [
-        0.17,
-        0.32,
-        0.14
-      ]
-    },
-    "boulder_01": {
-      "url": "assets/models/boulder_01.glb",
-      "bytes": 1187784,
-      "sourceTriangles": 66122,
-      "triangles": 26614,
-      "size": [
-        1.29,
-        1.84,
-        1.01
-      ]
-    },
     "dead_tree_trunk": {
       "url": "assets/models/dead_tree_trunk.glb",
       "bytes": 512560,
@@ -121,18 +99,85 @@
         1.59,
         0.57
       ]
+    },
+    "jacaranda_tree": {
+      "url": "assets/models/jacaranda_tree.glb",
+      "bytes": 1861500,
+      "sourceTriangles": 3863832,
+      "triangles": 55871,
+      "size": [
+        21.29,
+        17,
+        16.46
+      ]
+    },
+    "shrub_02": {
+      "url": "assets/models/shrub_02.glb",
+      "bytes": 188736,
+      "sourceTriangles": 27254,
+      "triangles": 4614,
+      "size": [
+        1.77,
+        1.31,
+        2.29
+      ]
+    },
+    "pachira_aquatica_01": {
+      "url": "assets/models/pachira_aquatica_01.glb",
+      "bytes": 458852,
+      "sourceTriangles": 76914,
+      "triangles": 4088,
+      "size": [
+        1.05,
+        1.9,
+        1
+      ]
+    },
+    "dead_tree_trunk_02": {
+      "url": "assets/models/dead_tree_trunk_02.glb",
+      "bytes": 686704,
+      "sourceTriangles": 83128,
+      "triangles": 5750,
+      "size": [
+        4.05,
+        1.05,
+        1.05
+      ]
+    },
+    "root_cluster_01": {
+      "url": "assets/models/root_cluster_01.glb",
+      "bytes": 788612,
+      "sourceTriangles": 225261,
+      "triangles": 18574,
+      "size": [
+        4.12,
+        1.51,
+        2.68
+      ]
+    },
+    "jacaranda_tree_far": {
+      "url": "assets/models/jacaranda_tree_far.glb",
+      "bytes": 564720,
+      "sourceTriangles": 3863832,
+      "triangles": 14417,
+      "size": [
+        21.85,
+        17,
+        16.5
+      ]
     }
   },
   "textures": {
     "forrest_ground_01": {
-      "diff": "assets/textures/forrest_ground_01_diff.webp",
-      "nor_gl": "assets/textures/forrest_ground_01_nor_gl.webp",
-      "arm": "assets/textures/forrest_ground_01_arm.webp"
+      "diff": "assets/textures/forrest_ground_01_diff.webp"
     },
-    "brown_mud_leaves_01": {
-      "diff": "assets/textures/brown_mud_leaves_01_diff.webp",
-      "nor_gl": "assets/textures/brown_mud_leaves_01_nor_gl.webp",
-      "arm": "assets/textures/brown_mud_leaves_01_arm.webp"
+    "forest_leaves_02": {
+      "diff": "assets/textures/forest_leaves_02_diff.webp",
+      "nor_gl": "assets/textures/forest_leaves_02_nor_gl.webp",
+      "arm": "assets/textures/forest_leaves_02_arm.webp"
+    },
+    "mud_forest": {
+      "diff": "assets/textures/mud_forest_diff.webp"
     }
   },
   "hdri": {
@@ -147,6 +192,18 @@
     "studio_small_09": {
       "url": "assets/hdri/studio_small_09_1k.hdr",
       "bytes": 1615248
+    },
+    "kloofendal_48d_partly_cloudy_puresky": {
+      "url": "assets/hdri/kloofendal_48d_partly_cloudy_puresky_2k.hdr",
+      "bytes": 5451493
+    },
+    "qwantani_late_afternoon_puresky": {
+      "url": "assets/hdri/qwantani_late_afternoon_puresky_2k.hdr",
+      "bytes": 4429634
+    },
+    "wasteland_clouds_puresky": {
+      "url": "assets/hdri/wasteland_clouds_puresky_2k.hdr",
+      "bytes": 4614016
     }
   }
 }

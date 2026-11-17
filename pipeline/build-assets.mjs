@@ -4,6 +4,9 @@
 //
 // Steps per model: Blender (normalise, animate, decimate) -> gltf-transform
 // (meshopt geometry, WebP textures). Textures and HDRIs are copied/converted with sharp.
+//
+// Poly Haven models with a `build` spec in sources.json are built without Blender by
+// build-polyhaven.mjs, which `npm run assets:build` runs afterwards (this script rewrites assets.json).
 import { execFileSync } from 'node:child_process';
 import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -28,8 +31,6 @@ const models = [
   { id: 'bald-cypress', job: 'prop', source: objaverse('bald-cypress'), size: 1024 },
   { id: 'fern-treeit', job: 'prop', source: objaverse('fern-treeit'), size: 1024 },
   { id: 'fern_02', job: 'prop', source: polyhaven('fern_02'), size: 1024 },
-  { id: 'rock_07', job: 'prop:0.15', source: polyhaven('rock_07'), size: 1024 },
-  { id: 'boulder_01', job: 'prop:0.05', source: polyhaven('boulder_01'), size: 1024 },
   { id: 'dead_tree_trunk', job: 'prop:0.08', source: polyhaven('dead_tree_trunk'), size: 1024 },
   { id: 'tree_stump_01', job: 'prop:0.1', source: polyhaven('tree_stump_01'), size: 1024 },
 ];

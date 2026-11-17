@@ -90,13 +90,20 @@
       { "id": "citrus_orchard_puresky", "type": "hdri", "res": "2k", "title": "Citrus Orchard (Pure Sky)", "creator": "Dimitrios Savva, Jarod Guest", "use": "Morning sky and image-based lighting" },
       { "id": "belfast_sunset_puresky", "type": "hdri", "res": "2k", "title": "Belfast Sunset (Pure Sky)", "creator": "Dimitrios Savva, Greg Zaal, Jarod Guest", "use": "Dusk sky and image-based lighting" },
       { "id": "studio_small_09", "type": "hdri", "res": "1k", "title": "Studio Small 09", "creator": "Sergej Majboroda", "use": "Gallery reflections for the fossil scan" },
-      { "id": "forrest_ground_01", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Forest Ground 01", "creator": "Rob Tuytel", "use": "Floodplain soil" },
-      { "id": "brown_mud_leaves_01", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Brown Mud Leaves 01", "creator": "Rob Tuytel", "use": "River-margin mud" },
+      { "id": "forrest_ground_01", "type": "texture", "res": "2k", "maps": ["diff"], "title": "Forest Ground 01", "creator": "Rob Tuytel", "use": "Bare-soil patches on the floodplain" },
       { "id": "fern_02", "type": "model", "res": "1k", "title": "Fern 02", "creator": "Rob Tuytel, Rico Cilliers", "use": "Ground-cover fern" },
-      { "id": "rock_07", "type": "model", "res": "1k", "title": "Rock 07", "creator": "Jenelle van Heerden", "use": "Scattered rocks" },
-      { "id": "boulder_01", "type": "model", "res": "1k", "title": "Boulder 01", "creator": "Rico Cilliers", "use": "Large rocks" },
       { "id": "dead_tree_trunk", "type": "model", "res": "1k", "title": "Dead Tree Trunk", "creator": "Rob Tuytel", "use": "Fallen log" },
-      { "id": "tree_stump_01", "type": "model", "res": "1k", "title": "Tree Stump 01", "creator": "Rob Tuytel", "use": "Stump" }
+      { "id": "tree_stump_01", "type": "model", "res": "1k", "title": "Tree Stump 01", "creator": "Rob Tuytel", "use": "Stump" },
+      { "id": "kloofendal_48d_partly_cloudy_puresky", "type": "hdri", "res": "2k", "title": "Kloofendal 48d Partly Cloudy (Pure Sky)", "creator": "Greg Zaal, Jarod Guest", "use": "Midday sky for the floodplain forest scene" },
+      { "id": "qwantani_late_afternoon_puresky", "type": "hdri", "res": "2k", "title": "Qwantani Late Afternoon (Pure Sky)", "creator": "Greg Zaal, Jarod Guest", "use": "Late-afternoon sky for the impact-day scene" },
+      { "id": "wasteland_clouds_puresky", "type": "hdri", "res": "2k", "title": "Wasteland Clouds (Pure Sky)", "creator": "Jarod Guest, Sergej Majboroda", "use": "Dim overcast sky for the post-impact scene" },
+      { "id": "forest_leaves_02", "type": "texture", "res": "2k", "maps": ["diff", "nor_gl", "arm"], "title": "Forest Leaves 02", "creator": "Rob Tuytel", "use": "Humid floodplain floor: moss and leaf litter" },
+      { "id": "mud_forest", "type": "texture", "res": "2k", "maps": ["diff"], "title": "Mud Forest", "creator": "eye-candy.xyz", "use": "Wet river-bank mud" },
+      { "id": "jacaranda_tree", "type": "model", "res": "1k", "title": "Jacaranda Tree", "creator": "Rob Tuytel, Rico Cilliers", "use": "Stand-in for Hell Creek broadleaf (angiosperm) trees", "build": { "height": 17, "thinLeaves": { "keep": 0.02, "grow": 3.1 }, "sloppy": { "branches": 0.004, "trunk": 0.025 }, "variants": [{ "suffix": "_far", "thinLeaves": { "keep": 0.005, "grow": 5.5 }, "sloppy": { "branches": 0.0012, "trunk": 0.004 }, "textureSize": 512 }] } },
+      { "id": "shrub_02", "type": "model", "res": "1k", "title": "Shrub 02", "creator": "Rico Cilliers", "use": "Angiosperm undergrowth stand-in", "build": { "pick": "_c", "simplify": 0.5 } },
+      { "id": "pachira_aquatica_01", "type": "model", "res": "1k", "title": "Pachira Aquatica 01", "creator": "Rob Tuytel, Rico Cilliers", "use": "Broadleaf sapling stand-in for forest understory", "build": { "pick": "_d", "simplify": 0.15, "simplifyError": 0.01 } },
+      { "id": "dead_tree_trunk_02", "type": "model", "res": "1k", "title": "Dead Tree Trunk 02", "creator": "Jenelle van Heerden, Rico Cilliers", "use": "Driftwood and fallen trunks", "build": { "simplify": 0.05 } },
+      { "id": "root_cluster_01", "type": "model", "res": "1k", "title": "Root Cluster 01", "creator": "Jenelle van Heerden, Rico Cilliers", "use": "Eroded cut-bank roots along the channel", "build": { "simplify": 0.05 } }
     ]
   }
 }

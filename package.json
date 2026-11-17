@@ -3,17 +3,18 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Minimal 3D prototype: reconstructed Hell Creek dinosaurs in React Three Fiber",
+  "description": "3D prototype: reconstructed Hell Creek dinosaurs and the end-Cretaceous impact in React Three Fiber",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "assets:fetch": "node pipeline/fetch-sources.mjs",
-    "assets:build": "node pipeline/build-assets.mjs",
+    "assets:build": "node pipeline/build-assets.mjs && node pipeline/build-polyhaven.mjs",
     "data:pbdb": "node pipeline/fetch-pbdb.mjs",
     "verify:screens": "node pipeline/screenshot.mjs",
-    "measure:fps": "node pipeline/measure-fps.mjs"
+    "measure:fps": "node pipeline/measure-fps.mjs",
+    "assets:build:polyhaven": "node pipeline/build-polyhaven.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

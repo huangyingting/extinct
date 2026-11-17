@@ -1,5 +1,6 @@
 import {
   BufferAttribute,
+  Color,
   BufferGeometry,
   Group,
   InstancedMesh,
@@ -72,6 +73,30 @@ export interface InstanceOptions {
   wind?: number;
   /** Adjust imported materials, e.g. to tone down glossy foliage. */
   tweak?: (material: MeshStandardMaterial) => void;
+  /** Keep only sub-meshes whose material name passes, e.g. to drop foliage from dead trees. */
+  include?: (materialName: string) => boolean;
+  /** Per-instance brightness/hue variation (0 = none) so repeated models do not read as clones. */
+  tint?: number;
+  /** Hide whole chunks beyond this distance from the camera (small plants are invisible far away). */
+  cullDistance?: number;
+}
+
+/** Show only the chunks of a distance-culled instance group that are within range of the camera. */
+export function cullChunks(group: Group, camera: Vector3, distance: number) {
+  for (const child of group.children) {
+    const sphere = (child as InstancedMesh).boundingSphere;
+    if (sphere) child.visible = sphere.center.distanceTo(camera) - sphere.radius < distance;
+  }
+}
+
+/** Deterministic per-placement colour: slight brightness, warmth and saturation changes. */
+function instanceTint(p: Placement, amount: number, target: Color) {
+  const h = Math.sin(p.x * 12.9898 + p.z * 78.233) * 43758.5453;
+  const a = h - Math.floor(h);
+  const b = (h * 7.13) - Math.floor(h * 7.13);
+  const light = 1 - amount * 0.5 + amount * a;
+  const warm = (b - 0.5) * amount * 0.6;
+  return target.setRGB(light * (1 + warm), light, light * (1 - warm * 1.4));
 }
 
 /** Spatial chunk size; each chunk is a separate InstancedMesh so the renderer can frustum-cull it. */
@@ -102,10 +127,12 @@ export function buildInstances(scene: Object3D, placements: Placement[], options
   const position = new Vector3();
   const scale = new Vector3();
   const chunks = chunk(placements);
+  const color = new Color();
 
   scene.traverse((object) => {
     const mesh = object as Mesh;
     if (!mesh.isMesh) return;
+    if (options.include && !options.include((mesh.material as Material).name)) return;
     const geometry = bakeGeometry(mesh, new Matrix4().multiplyMatrices(rootInverse, mesh.matrixWorld));
     const material = (mesh.material as MeshStandardMaterial).clone();
     options.tweak?.(material);
@@ -117,6 +144,7 @@ export function buildInstances(scene: Object3D, placements: Placement[], options
         position.set(p.x, p.y, p.z);
         scale.setScalar(p.scale);
         instanced.setMatrixAt(i, matrix.compose(position, quaternion, scale));
+        if (options.tint) instanced.setColorAt(i, instanceTint(p, options.tint, color));
       });
       instanced.castShadow = options.castShadow ?? false;
       instanced.receiveShadow = options.receiveShadow ?? true;

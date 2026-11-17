@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshReflectorMaterial } from '@react-three/drei';
-import { DataTexture, RepeatWrapping, RGBAFormat, Vector2 } from 'three';
+import { DataTexture, RepeatWrapping, RGBAFormat, Vector2, type Mesh } from 'three';
 import { WATER_LEVEL, WORLD_SIZE } from '../world/terrain';
 
 /** Tileable ripple normal map from a sum of integer-frequency waves. */
@@ -34,25 +34,50 @@ function rippleNormals(size = 256) {
   return texture;
 }
 
-/** `reflect` renders a true planar reflection; without it the water mirrors only the sky (environment map). */
-export function Water({ tint = '#27322a', reflect = true }: { tint?: string; reflect?: boolean }) {
+/**
+ * Seiche surge for the impact scene: the river rises over its banks and drains back in pulses,
+ * after the surge deposits described at Tanis. Time is compressed (minutes in reality).
+ */
+export function surgeLevel(t: number) {
+  // Two surges of decreasing height, repeating every 75 s.
+  const u = t % 75;
+  const pulse = (start: number, rise: number, hold: number, fall: number, height: number) => {
+    const v = u - start;
+    if (v < 0 || v > rise + hold + fall) return 0;
+    if (v < rise) return height * Math.sin((v / rise) * Math.PI * 0.5) ** 2;
+    if (v < rise + hold) return height;
+    return height * Math.cos(((v - rise - hold) / fall) * Math.PI * 0.5) ** 2;
+  };
+  return pulse(10, 7, 6, 14, 1.7) + pulse(42, 6, 4, 12, 1.1);
+}
+
+/**
+ * `reflect` renders a true planar reflection; without it the water mirrors only the sky (environment map).
+ * Hell Creek rivers carried a lot of fine sediment, so the water is a dull, silty brown-green.
+ */
+export function Water({ tint = '#3a3a2c', reflect = true, surge = false }: { tint?: string; reflect?: boolean; surge?: boolean }) {
   const normals = useMemo(() => rippleNormals(), []);
   const normalScale = useMemo(() => new Vector2(0.18, 0.18), []);
+  const mesh = useRef<Mesh>(null);
+  const clock = useRef(0);
   useFrame((_, delta) => {
-    normals.offset.x += delta * 0.006;
-    normals.offset.y += delta * 0.011;
+    clock.current += delta;
+    const speed = surge ? 3 : 1;
+    normals.offset.x += delta * 0.006 * speed;
+    normals.offset.y += delta * 0.011 * speed;
+    if (surge && mesh.current) mesh.current.position.y = WATER_LEVEL + surgeLevel(clock.current);
   });
   return (
-    <mesh rotation-x={-Math.PI / 2} position-y={WATER_LEVEL}>
+    <mesh ref={mesh} rotation-x={-Math.PI / 2} position-y={WATER_LEVEL}>
       <planeGeometry args={[WORLD_SIZE, WORLD_SIZE]} />
       {reflect ? (
       <MeshReflectorMaterial
         resolution={1024}
         blur={[200, 60]}
         mixBlur={0.8}
-        mixStrength={1.3}
+        mixStrength={1.0}
         mixContrast={1}
-        mirror={0.7}
+        mirror={0.55}
         depthScale={0}
         color={tint}
         metalness={0.1}

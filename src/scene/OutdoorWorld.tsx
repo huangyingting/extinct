@@ -3,13 +3,15 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Environment, OrbitControls, Sparkles } from '@react-three/drei';
 import { Bloom, EffectComposer, N8AO, ToneMapping, Vignette } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
-import { Color, DirectionalLight, LinearSRGBColorSpace, Object3D, PerspectiveCamera, Vector3 } from 'three';
+import { Color, DirectionalLight, Euler, LinearSRGBColorSpace, Object3D, PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { OutdoorScene } from '../data/scenes';
 import { SPECIES } from '../data/species';
 import { leaders, useApp } from '../state';
 import { terrainHeight } from '../world/terrain';
+import { Grade } from '../three/Grade';
 import { Dinosaur } from './Dinosaur';
+import { ImpactSky } from './ImpactSky';
 import { Terrain } from './Terrain';
 import { Vegetation } from './Vegetation';
 import { Water } from './Water';
@@ -23,16 +25,22 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
   const desired = useMemo(() => new Vector3(), []);
   const delta = useMemo(() => new Vector3(), []);
 
+  const hasAnimals = scene.animals.length > 0;
   useEffect(() => {
     // Leaders register in their own effects, which run before this sibling's.
-    const leader = leaders.get(scene.camera.focus);
     const c = controls.current;
-    if (!leader || !c) return;
-    c.target.copy(leader.position);
-    c.target.y += SPECIES[scene.camera.focus].model.heightM * 0.55;
+    if (!c) return;
+    const leader = scene.camera.focus ? leaders.get(scene.camera.focus) : undefined;
+    if (leader && scene.camera.focus) {
+      c.target.copy(leader.position);
+      c.target.y += SPECIES[scene.camera.focus].model.heightM * 0.55;
+    } else if (scene.camera.target) {
+      const [tx, tz] = scene.camera.target;
+      c.target.set(tx, terrainHeight(tx, tz) + 2.5, tz);
+    } else return;
     const [ox, oy, oz] = scene.camera.offset;
-    const x = leader.position.x + ox;
-    const z = leader.position.z + oz;
+    const x = c.target.x + ox;
+    const z = c.target.z + oz;
     camera.position.set(x, terrainHeight(x, z) + oy, z);
     camera.lookAt(c.target);
     c.update();
@@ -52,7 +60,7 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
   useFrame((_, dt) => {
     const c = controls.current;
     if (!c) return;
-    const leader = leaders.get(focus);
+    const leader = hasAnimals ? leaders.get(focus) : undefined;
     if (follow && leader) {
       desired.copy(leader.position);
       desired.y += SPECIES[focus].model.heightM * 0.55;
@@ -65,7 +73,7 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
     c.update();
   });
 
-  const span = SPECIES[focus].model.lengthM;
+  const span = hasAnimals ? SPECIES[focus].model.lengthM : 10;
   return (
     <OrbitControls
       ref={controls}
@@ -75,7 +83,7 @@ function CameraRig({ scene }: { scene: OutdoorScene }) {
       minDistance={span * 0.6}
       maxDistance={span * 9}
       maxPolarAngle={Math.PI * 0.495}
-      enablePan={!follow}
+      enablePan={!follow || !hasAnimals}
     />
   );
 }
@@ -131,42 +139,55 @@ export function OutdoorWorld({ scene }: { scene: OutdoorScene }) {
   const focus = useApp((s) => s.focus);
   const low = useApp((s) => s.quality === 'low');
   const seenLeader = new Set<string>();
+  const rotation = useMemo(() => new Euler(0, scene.skyRotation ?? 0, 0), [scene]);
+  const grade = scene.grade && <Grade tint={scene.grade.tint} saturation={scene.grade.saturation} />;
   return (
     <>
       <Exposure value={scene.exposure} />
-      <Environment files={scene.hdri} background environmentIntensity={scene.environmentIntensity} />
+      <Environment
+        files={scene.hdri}
+        background
+        environmentIntensity={scene.environmentIntensity}
+        backgroundIntensity={scene.backgroundIntensity ?? 1}
+        backgroundRotation={rotation}
+        environmentRotation={rotation}
+      />
       <fogExp2 attach="fog" args={[fogColor, scene.fogDensity]} />
       <Sun scene={scene} key={low ? 'low' : 'high'} mapSize={low ? 2048 : 4096} />
-      <Terrain />
-      <Water tint={scene.id === 'dusk' ? '#2c2a26' : '#26302a'} reflect={!low} />
-      <Vegetation />
-      {scene.animals.map((animal, index) => {
+      <Terrain clay={scene.boundaryClay ?? 0} />
+      <Water tint={scene.waterTint} reflect={!low} surge={scene.impact} />
+      <Vegetation scene={scene} />
+      {scene.animals.map((animal) => {
         const leader = !seenLeader.has(animal.species);
         seenLeader.add(animal.species);
         return (
           <Dinosaur
             key={`${scene.id}-${animal.key}`}
+            id={`${scene.id}-${animal.key}`}
             species={animal.species}
             path={animal.path}
             start={animal.start}
             phase={animal.phase}
-            lateral={(index % 3) * 4 - 4}
+            lateral={animal.lateral ?? 0}
             leader={leader}
           />
         );
       })}
-      <FocusSparkles focus={focus} />
+      {scene.particles === 'spores' && scene.animals.length > 0 && <FocusSparkles focus={focus} />}
+      {scene.impact && <ImpactSky />}
       <CameraRig scene={scene} />
       {low ? (
         <EffectComposer key="low" multisampling={0}>
-          <Bloom mipmapBlur luminanceThreshold={1.1} intensity={0.35} />
+          <>{grade}</>
+          <Bloom mipmapBlur luminanceThreshold={1.1} intensity={scene.impact ? 0.8 : 0.35} />
           <ToneMapping mode={ToneMappingMode.AGX} />
           <Vignette offset={0.22} darkness={0.55} />
         </EffectComposer>
       ) : (
         <EffectComposer key="high" multisampling={4}>
           <N8AO aoRadius={2.5} distanceFalloff={1.2} intensity={2.2} halfRes />
-          <Bloom mipmapBlur luminanceThreshold={1.1} intensity={0.35} />
+          <>{grade}</>
+          <Bloom mipmapBlur luminanceThreshold={1.1} intensity={scene.impact ? 0.8 : 0.35} />
           <ToneMapping mode={ToneMappingMode.AGX} />
           <Vignette offset={0.22} darkness={0.55} />
         </EffectComposer>
